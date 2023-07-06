@@ -524,7 +524,7 @@ enum ErrorCode cmd_SOUND_SOURCE(struct Core *core)
     ++interpreter->pc;
     
     // address value
-    struct TypedValue aValue = itp_evaluateNumericExpression(core, 0, 0xFFFF);
+    struct TypedValue aValue = itp_evaluateNumericExpression(core, 0, VM_MAX);
     if (aValue.type == ValueTypeError) return aValue.v.errorCode;
     
     if (interpreter->pass == PassRun)

@@ -491,7 +491,7 @@ enum ErrorCode cmd_WAIT(struct Core *core)
     else
     {
         // value
-        struct TypedValue value = itp_evaluateNumericExpression(core, 1, 0xFFFF);
+        struct TypedValue value = itp_evaluateNumericExpression(core, 1, VM_MAX);
         if (value.type == ValueTypeError) return value.v.errorCode;
         wait = value.v.floatValue - 1;
     }

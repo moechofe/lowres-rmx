@@ -33,4 +33,8 @@
 #define SETTINGS_FILE 1
 #endif
 
+#if defined(__linux__)
+#define __LINUX__
+#endif
+
 #endif /* config_h */

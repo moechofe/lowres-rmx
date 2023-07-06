@@ -126,7 +126,7 @@ enum ErrorCode cmd_SAVE(struct Core *core)
     {
         int address = addressValue.v.floatValue;
         int length = lengthValue.v.floatValue;
-        if (address + length > 0x10000)
+        if (address + length > VM_SIZE)
         {
             return ErrorIllegalMemoryAccess;
         }

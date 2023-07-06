@@ -99,6 +99,7 @@ void overlay_draw(struct Core *core, bool ingame)
             }
             else
             {
+                // XXX: What is this 12?
                 txtlib_setCells(lib, 7, 7, 12, 7, 0);
             }
         }

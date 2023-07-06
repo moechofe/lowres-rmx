@@ -26,7 +26,7 @@ bool sprlib_isSpriteOnScreen(struct Sprite *sprite)
 {
     int size = (sprite->attr.size + 1) << 3;
     return (   sprite->x < SCREEN_WIDTH + SPRITE_OFFSET_X
-            && sprite->y < SCREEN_HEIGHT + SPRITE_OFFSET_Y
+            && (int)sprite->y < SCREEN_HEIGHT + SPRITE_OFFSET_Y
             && sprite->x + size > SPRITE_OFFSET_X
             && sprite->y + size > SPRITE_OFFSET_Y);
 }

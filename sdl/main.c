@@ -42,7 +42,9 @@
 #include <string.h>
 
 const char *defaultDisk = "Disk.nx";
-const int defaultWindowScale = 4;
+// XXX: Change the default scale on linux
+//const int defaultWindowScale = 4;
+const int defaultWindowScale = 1;
 const int joyAxisThreshold = 16384;
 
 const int keyboardControls[2][2][8] = {
@@ -146,7 +148,7 @@ int main(int argc, const char * argv[])
         
         window = SDL_CreateWindow(windowTitle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH * defaultWindowScale, SCREEN_HEIGHT * defaultWindowScale, windowFlags);
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
         
         SDL_AudioSpec desiredAudioSpec = {
             .freq = 44100,
@@ -166,7 +168,7 @@ int main(int argc, const char * argv[])
         configureJoysticks();
         
         bootNX();
-        if (mainProgramFilename[0] != 0)
+        if (hasProgram())
         {
             machine_poke(runner.core, bootIntroStateAddress, BootIntroStateProgramAvailable);
         }
@@ -542,6 +544,8 @@ void update(void *arg)
                 }
                 else if (keycode == SDLK_ESCAPE)
                 {
+                    // XXX: Always quit when press ESCAPE
+                    // quit = true;
                     if (settings.session.disabledev)
                     {
                         quit = true;
@@ -835,8 +839,8 @@ void closeJoysticks() {
 
 void setTouchPosition(int windowX, int windowY)
 {
-    coreInput.touchX = (windowX - screenRect.x) * SCREEN_WIDTH / screenRect.w;
-    coreInput.touchY = (windowY - screenRect.y) * SCREEN_HEIGHT / screenRect.h;
+    coreInput.touchX = (float)(windowX - screenRect.x) * SCREEN_WIDTH / screenRect.w;
+    coreInput.touchY = (float)(windowY - screenRect.y) * SCREEN_HEIGHT / screenRect.h;
 }
 
 void toggleZoom()

@@ -66,8 +66,8 @@ union IOAttributes {
 
 struct IORegisters {
     union Gamepad gamepads[NUM_GAMEPADS]; // 2 bytes
-    uint8_t touchX;
-    uint8_t touchY;
+    float touchX;
+    float touchY;
     char key;
     union IOStatus status;
     union IOAttributes attr;

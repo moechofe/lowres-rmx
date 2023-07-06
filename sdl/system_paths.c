@@ -21,6 +21,7 @@
 #include "system_paths.h"
 #include <stdlib.h>
 #include <string.h>
+#include "config.h"
 
 #if defined(_WIN32)
 #include <windows.h>

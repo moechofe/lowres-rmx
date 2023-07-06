@@ -24,15 +24,21 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define SCREEN_WIDTH 160
-#define SCREEN_HEIGHT 128
+#define SCREEN_WIDTH 216 // 27x8
+#define SCREEN_HEIGHT 384 // 48x8
 #define NUM_CHARACTERS 256
 #define NUM_PALETTES 8
 #define PLANE_COLUMNS 32
 #define PLANE_ROWS 32
+#define EXTENDED_PLANE_COLUMNS 64
+#define EXTENDED_PLANE_ROWS 64
 #define NUM_SPRITES 64
+// XXX: #define NUM_SPRITES 256
 #define SPRITE_OFFSET_X 32
 #define SPRITE_OFFSET_Y 32
+
+#define COLS_MASK (PLANE_COLUMNS-1)
+#define ROWS_MASK (PLANE_ROWS-1)
 
 struct Core;
 
@@ -77,6 +83,10 @@ struct Cell {
 // 2048 bytes
 struct Plane {
     struct Cell cells[PLANE_ROWS][PLANE_COLUMNS];
+};
+
+struct ExtendedPlane {
+    struct Cell cells[EXTENDED_PLANE_ROWS][EXTENDED_PLANE_COLUMNS];
 };
 
 // ===========================================

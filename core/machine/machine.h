@@ -28,6 +28,8 @@
 #include "video_chip.h"
 #include "audio_chip.h"
 
+#define VM_SIZE 0x10000
+#define VM_MAX 0xFFFF
 #define PERSISTENT_RAM_SIZE 4096
 
 struct Core;

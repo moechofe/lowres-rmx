@@ -54,7 +54,7 @@ enum ErrorCode cmd_BG_SOURCE(struct Core *core)
     ++interpreter->pc;
     
     // address value
-    struct TypedValue aValue = itp_evaluateNumericExpression(core, 0, 0xFFFF);
+    struct TypedValue aValue = itp_evaluateNumericExpression(core, 0, VM_MAX);
     if (aValue.type == ValueTypeError) return aValue.v.errorCode;
     
     int w = 0;
@@ -64,7 +64,7 @@ enum ErrorCode cmd_BG_SOURCE(struct Core *core)
         ++interpreter->pc;
         
         // width value
-        struct TypedValue wValue = itp_evaluateNumericExpression(core, 1, 0xFFFF);
+        struct TypedValue wValue = itp_evaluateNumericExpression(core, 1, VM_MAX);
         if (wValue.type == ValueTypeError) return wValue.v.errorCode;
         
         w = wValue.v.floatValue;
@@ -77,7 +77,7 @@ enum ErrorCode cmd_BG_SOURCE(struct Core *core)
         ++interpreter->pc;
         
         // height value
-        struct TypedValue hValue = itp_evaluateNumericExpression(core, 1, 0xFFFF);
+        struct TypedValue hValue = itp_evaluateNumericExpression(core, 1, VM_MAX);
         if (hValue.type == ValueTypeError) return hValue.v.errorCode;
         
         h = hValue.v.floatValue;
@@ -113,7 +113,7 @@ enum ErrorCode cmd_BG_COPY(struct Core *core)
     ++interpreter->pc;
     
     // src X value
-    struct TypedValue srcXValue = itp_evaluateNumericExpression(core, 0, 0xFFFF);
+    struct TypedValue srcXValue = itp_evaluateNumericExpression(core, 0, VM_MAX);
     if (srcXValue.type == ValueTypeError) return srcXValue.v.errorCode;
     
     // comma
@@ -121,7 +121,7 @@ enum ErrorCode cmd_BG_COPY(struct Core *core)
     ++interpreter->pc;
     
     // src Y value
-    struct TypedValue srcYValue = itp_evaluateNumericExpression(core, 0, 0xFFFF);
+    struct TypedValue srcYValue = itp_evaluateNumericExpression(core, 0, VM_MAX);
     if (srcYValue.type == ValueTypeError) return srcYValue.v.errorCode;
 
     // comma

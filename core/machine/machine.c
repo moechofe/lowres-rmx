@@ -26,7 +26,7 @@
 
 void machine_init(struct Core *core)
 {
-    assert(sizeof(struct Machine) == 0x10000);
+    assert(sizeof(struct Machine) == VM_SIZE);
 }
 
 void machine_reset(struct Core *core, bool resetPersistent)
@@ -49,7 +49,7 @@ void machine_reset(struct Core *core, bool resetPersistent)
 
 int machine_peek(struct Core *core, int address)
 {
-    if (address < 0 || address > 0xFFFF)
+    if (address < 0 || address > VM_MAX)
     {
         return -1;
     }
