@@ -52,8 +52,8 @@ struct CoreInputGamepad {
 struct CoreInput {
     struct CoreInputGamepad gamepads[NUM_GAMEPADS];
     bool pause;
-    int touchX;
-    int touchY;
+    float touchX;
+    float touchY;
     bool touch;
     char key;
     bool out_hasUsedInput;

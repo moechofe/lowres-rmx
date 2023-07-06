@@ -163,8 +163,8 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
         if (ioAttr.touchEnabled)
         {
             ioRegisters->status.touch = 1;
-            int x = input->touchX;
-            int y = input->touchY;
+            float x = input->touchX;
+            float y = input->touchY;
             if (x < 0) x = 0; else if (x >= SCREEN_WIDTH) x = SCREEN_WIDTH - 1;
             if (y < 0) y = 0; else if (y >= SCREEN_HEIGHT) y = SCREEN_HEIGHT - 1;
             ioRegisters->touchX = x;

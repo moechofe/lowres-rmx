@@ -24,6 +24,12 @@
 
 #define OVERLAY_FLAG (1<<6)
 
+// FAMICUBE
+uint32_t better_palette[]={ 0x000000, 0xe03c28, 0xffffff, 0xd7d7d7, 0xa8a8a8, 0x7b7b7b, 0x343434, 0x151515, 0x0d2030, 0x415d66, 0x71a6a1, 0xbdffca, 0x25e2cd, 0x0a98ac, 0x005280, 0x00604b, 0x20b562, 0x58d332, 0x139d08, 0x004e00, 0x172808, 0x376d03, 0x6ab417, 0x8cd612, 0xbeeb71, 0xeeffa9, 0xb6c121, 0x939717, 0xcc8f15, 0xffbb31, 0xffe737, 0xf68f37, 0xad4e1a, 0x231712, 0x5c3c0d, 0xae6c37, 0xc59782, 0xe2d7b5, 0x4f1507, 0x823c3d, 0xda655e, 0xe18289, 0xf5b784, 0xffe9c5, 0xff82ce, 0xcf3c71, 0x871646, 0xa328b3, 0xcc69e4, 0xd59cfc, 0xfec9ed, 0xe2c9ff, 0xa675fe, 0x6a31ca, 0x5a1991, 0x211640, 0x3d34a5, 0x6264dc, 0x9ba0ef, 0x98dcff, 0x5ba8ff, 0x0a89ff, 0x024aca, 0x00177d, };
+
+// ENDESGA 64
+// uint32_t better_palette[]={ 0xff0040, 0x131313, 0x1b1b1b, 0x272727, 0x3d3d3d, 0x5d5d5d, 0x858585, 0xb4b4b4, 0xffffff, 0xc7cfdd, 0x92a1b9, 0x657392, 0x424c6e, 0x2a2f4e, 0x1a1932, 0x0e071b, 0x1c121c, 0x391f21, 0x5d2c28, 0x8a4836, 0xbf6f4a, 0xe69c69, 0xf6ca9f, 0xf9e6cf, 0xedab50, 0xe07438, 0xc64524, 0x8e251d, 0xff5000, 0xed7614, 0xffa214, 0xffc825, 0xffeb57, 0xd3fc7e, 0x99e65f, 0x5ac54f, 0x33984b, 0x1e6f50, 0x134c4c, 0x0c2e44, 0x00396d, 0x0069aa, 0x0098dc, 0x00cdf9, 0x0cf1ff, 0x94fdff, 0xfdd2ed, 0xf389f5, 0xdb3ffd, 0x7a09fa, 0x3003d9, 0x0c0293, 0x03193f, 0x3b1443, 0x622461, 0x93388f, 0xca52c9, 0xc85086, 0xf68187, 0xf5555d, 0xea323c, 0xc42430, 0x891e2b, 0x571c27, }
+
 int video_getCharacterPixel(struct Character *character, int x, int y)
 {
     int b0 = (character->data[y] >> (7 - x)) & 0x01;
@@ -52,7 +58,7 @@ void video_renderPlane(struct Character *characters, struct Plane *plane, int si
         if (!b)
         {
             int planeX = x + scrollX;
-            int column = (planeX >> divShift) & 31;
+            int column = (planeX >> divShift) & COLS_MASK;
             struct Cell *cell = &plane->cells[row][column];
             
             int index = cell->character;
@@ -229,16 +235,20 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
         {
             int colorIndex = scanlineBuffer[x] & 0x1F;
             int color = (scanlineBuffer[x] & OVERLAY_FLAG) ? overlayColors[colorIndex] : skip ? 0 : creg->colors[colorIndex];
-            int r = (color >> 4) & 0x03;
-            int g = (color >> 2) & 0x03;
-            int b = color & 0x03;
+            // int r = (color >> 4) & 0x03;
+            // int g = (color >> 2) & 0x03;
+            // int b = color & 0x03;
+
+            uint32_t c = better_palette[color & 63];
             
+            // XXX: replace color system
             // add some gray (0x000F0F0F) to simulate screen
-#if __LIBRETRO__
-            *outputPixel = (b * 0x55) | ((g * 0x55) << 8) | ((r * 0x55) << 16) | 0x000F0F0F;
-#else
-            *outputPixel = (r * 0x55) | ((g * 0x55) << 8) | ((b * 0x55) << 16) | 0x000F0F0F;
-#endif
+// #if __LIBRETRO__
+//             *outputPixel = (b * 0x55) | ((g * 0x55) << 8) | ((r * 0x55) << 16) | 0x000F0F0F;
+// #else
+            //*outputPixel = (r * 0x55) | ((g * 0x55) << 8) | ((b * 0x55) << 16) | 0x000F0F0F;
+// #endif
+            *outputPixel = c;
 
             ++outputPixel;
         }
