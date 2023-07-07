@@ -26,8 +26,8 @@
 #include <stdint.h>
 #include "error.h"
 
-#define MAX_ENTRIES 16
-#define DATA_SIZE 0x8000
+#define MAX_ENTRIES 32
+#define DATA_SIZE 0x10000
 #define ENTRY_COMMENT_SIZE 32
 
 struct DataEntry {

@@ -53,7 +53,7 @@ int machine_peek(struct Core *core, int address)
     {
         return -1;
     }
-    if (address >= 0xE000 && address < 0xF000) // persistent
+    if (address >= 0x0E000 && address < 0x0F800) // persistent
     {
         if (!core->machineInternals->hasAccessedPersistent)
         {
@@ -68,17 +68,17 @@ int machine_peek(struct Core *core, int address)
 
 bool machine_poke(struct Core *core, int address, int value)
 {
-    if (address < 0x8000 || address > 0xFFFF)
+    if (address >= 0x10000)
     {
         // cartridge ROM or outside RAM
         return false;
     }
-    if (address >= 0xF000 && address < 0xFE00)
+    if (address >= 0x0F800 && address < 0x0FB00)
     {
         // reserved memory
         return false;
     }
-    if (address >= 0xFF80)
+    if (address >= 0xFF80) // TODO: update this
     {
         // reserved registers
         return false;
@@ -98,7 +98,7 @@ bool machine_poke(struct Core *core, int address, int value)
             return false;
         }
     }
-    else if (address >= 0xE000 && address < 0xF000) // persistent
+    else if (address >= 0x0E000 && address < 0x0F800) // persistent
     {
         if (!core->machineInternals->hasAccessedPersistent)
         {

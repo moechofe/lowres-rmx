@@ -280,7 +280,7 @@ struct TypedValue fnc_ROM_SIZE(struct Core *core)
         }
         else
         {
-            value.v.floatValue = interpreter->romDataManager.entries[index].start;
+            value.v.floatValue = interpreter->romDataManager.entries[index].start + 0x10000;
         }
     }
     return value;
