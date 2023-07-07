@@ -44,7 +44,7 @@ struct Plane *txtlib_getBackground(struct TextLib *lib, int bg)
 
 void txtlib_setCellAt(struct Plane *plane, int x, int y, int character, union CharacterAttributes attr)
 {
-    struct Cell *cell = &plane->cells[y & 0x1F][x & 0x1F];
+    struct Cell *cell = &plane->cells[y & ROWS_MASK][x & COLS_MASK];
     if (character >= 0)
     {
         cell->character = character;
@@ -58,21 +58,21 @@ void txtlib_scrollRow(struct Plane *plane, int fromX, int toX, int y, int deltaX
     {
         for (int x = toX; x > fromX; x--)
         {
-            plane->cells[y][x] = plane->cells[(y - deltaY) & 0x1F][(x - deltaX) & 0x1F];
+            plane->cells[y][x] = plane->cells[(y - deltaY) & ROWS_MASK][(x - deltaX) & COLS_MASK];
         }
     }
     else if (deltaX < 0)
     {
         for (int x = fromX; x < toX; x++)
         {
-            plane->cells[y][x] = plane->cells[(y - deltaY) & 0x1F][(x - deltaX) & 0x1F];
+            plane->cells[y][x] = plane->cells[(y - deltaY) & ROWS_MASK][(x - deltaX) & COLS_MASK];
         }
     }
     else
     {
         for (int x = fromX; x <= toX; x++)
         {
-            plane->cells[y][x] = plane->cells[(y - deltaY) & 0x1F][(x - deltaX) & 0x1F];
+            plane->cells[y][x] = plane->cells[(y - deltaY) & ROWS_MASK][(x - deltaX) & COLS_MASK];
         }
     }
 }
@@ -372,7 +372,7 @@ void txtlib_clearBackground(struct TextLib *lib, int bg)
 struct Cell *txtlib_getCell(struct TextLib *lib, int x, int y)
 {
     struct Plane *plane = txtlib_getBackground(lib, lib->bg);
-    return &plane->cells[y & 0x1F][x & 0x1F];
+    return &plane->cells[y & ROWS_MASK][x & COLS_MASK];
 }
 
 void txtlib_setCell(struct TextLib *lib, int x, int y, int character)
@@ -401,7 +401,7 @@ void txtlib_setCellsAttr(struct TextLib *lib, int fromX, int fromY, int toX, int
     {
         for (int x = fromX; x <= toX; x++)
         {
-            struct Cell *cell = &plane->cells[y & 0x1F][x & 0x1F];
+            struct Cell *cell = &plane->cells[y & ROWS_MASK][x & COLS_MASK];
             if (pal >= 0) cell->attr.palette = pal;
             if (flipX >= 0) cell->attr.flipX = flipX;
             if (flipY >= 0) cell->attr.flipY = flipY;
@@ -429,7 +429,7 @@ void txtlib_copyBackground(struct TextLib *lib, int srcX, int srcY, int width, i
         for (int x = 0; x < width; x++)
         {
             int px = dstX + x;
-            struct Cell *cell = &plane->cells[py & 0x1F][px & 0x1F];
+            struct Cell *cell = &plane->cells[py & ROWS_MASK][px & COLS_MASK];
             cell->character = machine_peek(lib->core, addr++);
             cell->attr.value = machine_peek(lib->core, addr++);
         }

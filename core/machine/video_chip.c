@@ -38,7 +38,7 @@ void video_renderPlane(struct Character *characters, struct Plane *plane, int si
 {
     int divShift = sizeMode ? 4 : 3;
     int planeY = y + scrollY;
-    int row = (planeY >> divShift) & 31;
+    int row = (planeY >> divShift) & ROWS_MASK;
     int cellY = planeY & 7;
     
     int x = 0;

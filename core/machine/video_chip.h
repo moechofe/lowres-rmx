@@ -28,10 +28,8 @@
 #define SCREEN_HEIGHT 384 // 48x8
 #define NUM_CHARACTERS 256
 #define NUM_PALETTES 8
-#define PLANE_COLUMNS 32
-#define PLANE_ROWS 32
-#define EXTENDED_PLANE_COLUMNS 64
-#define EXTENDED_PLANE_ROWS 64
+#define PLANE_COLUMNS 64
+#define PLANE_ROWS 64
 #define NUM_SPRITES 64
 // XXX: #define NUM_SPRITES 256
 #define SPRITE_OFFSET_X 32
@@ -85,19 +83,17 @@ struct Plane {
     struct Cell cells[PLANE_ROWS][PLANE_COLUMNS];
 };
 
-struct ExtendedPlane {
-    struct Cell cells[EXTENDED_PLANE_ROWS][EXTENDED_PLANE_COLUMNS];
-};
-
 // ===========================================
 // ================ Video RAM ================
 // ===========================================
 
-// 8 KB
+// 36Kibi
 struct VideoRam {
-    struct Character characters[NUM_CHARACTERS]; // 4 KB
-    struct Plane planeA; // 2 KB
-    struct Plane planeB; // 2 KB
+    struct Plane planeA; // 8Kibi
+    struct Plane planeB; // 8Kibi
+    struct Plane planeC; // 8Kibi
+    struct Plane planeD; // 8Kibi
+    struct Character characters[NUM_CHARACTERS]; // 4Kibi
 };
 
 // =================================================

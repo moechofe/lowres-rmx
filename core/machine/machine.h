@@ -37,14 +37,14 @@ struct Core;
 // 64 KB
 struct Machine {
     
-    // 0x0000
-    uint8_t nothing[0x8000]; // 32 KB
+    // 0x00000
+    struct VideoRam videoRam; // 36Kibi
+
+    // 0x09000 TODO: find usage
+    uint8_t nothing1[0x0A000-0x09000]; // 4Kibi
     
-    // 0x8000
-    struct VideoRam videoRam; // 8 KB
-    
-    // 0xA000
-    uint8_t workingRam[0x4000]; // 16 KB
+    // 0x0A000
+    uint8_t workingRam[0x04000]; // 16Kibi
     
     // 0xE000
     uint8_t persistentRam[PERSISTENT_RAM_SIZE]; // 4 KB
@@ -72,8 +72,7 @@ struct Machine {
     // 0xFF80
     uint8_t reservedRegisters[0x10000 - 0xFF80];
 
-    // TODO: move ROM here
-
+    // 0x10000..0x20000
     uint8_t cartridgeRom[0x10000]; // 64Kibi
 };
 
