@@ -27,7 +27,7 @@
 #include "video_chip.h"
 
 #define INPUT_BUFFER_SIZE 256
-#define OVERLAY_BG 2
+#define OVERLAY_BG 4
 
 struct Core;
 

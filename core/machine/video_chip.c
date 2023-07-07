@@ -218,6 +218,16 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
                 int scrollY = reg->scrollAY | (reg->scrollMSB.aY << 8);
                 video_renderPlane(ram->characters, &ram->planeA, reg->attr.planeACellSize, y, scrollX, scrollY, 0, scanlineBuffer);
             }
+            {
+                int scrollX = reg->scrollCX | (reg->scrollMSB.cX << 8);
+                int scrollY = reg->scrollCY | (reg->scrollMSB.cY << 8);
+                video_renderPlane(ram->characters, &ram->planeC, reg->attr.planeCCellSize, y, scrollX, scrollY, 0, scanlineBuffer);
+            }
+            {
+                int scrollX = reg->scrollDX | (reg->scrollMSB.dX << 8);
+                int scrollY = reg->scrollDY | (reg->scrollMSB.dY << 8);
+                video_renderPlane(ram->characters, &ram->planeD, reg->attr.planeDCellSize, y, scrollX, scrollY, 0, scanlineBuffer);
+            }
             if (reg->attr.spritesEnabled)
             {
                 memset(scanlineSpriteBuffer, 0, sizeof(scanlineSpriteBuffer));
@@ -234,6 +244,14 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
             int color = (scanlineBuffer[x] & OVERLAY_FLAG) ? overlayColors[colorIndex] : skip ? 0 : creg->colors[colorIndex];
 
             uint32_t c = better_palette[color & 63];
+
+#if __APPLE__
+            uint32_t a=(c>>24)&0xff;
+            uint32_t r=(c>>16)&0xff;
+            uint32_t g=(c>>8)&0xff;
+            uint32_t b=c&0xff;
+            c=(a<<24)|(b<<16)|(g<<8)|r;
+#endif
             *outputPixel = c;
             ++outputPixel;
         }

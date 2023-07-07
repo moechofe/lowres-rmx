@@ -41,7 +41,7 @@ struct SimpleAttributes
 enum ErrorCode itp_evaluateSimpleAttributes(struct Core *core, struct SimpleAttributes *attrs);
 
 struct TypedValue itp_evaluateCharAttributes(struct Core *core, union CharacterAttributes oldAttr);
-struct TypedValue itp_evaluateDisplayAttributes(struct Core *core, union DisplayAttributes oldAttr);
+//struct TypedValue itp_evaluateDisplayAttributes(struct Core *core, union DisplayAttributes oldAttr);
 struct TypedValue itp_evaluateLFOAttributes(struct Core *core, union LFOAttributes oldAttr);
 
 #endif /* interpreter_utils_h */

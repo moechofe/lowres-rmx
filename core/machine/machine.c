@@ -41,7 +41,7 @@ void machine_reset(struct Core *core, bool resetPersistent)
     }
     
     // registers and reserved spaces
-    memset(core->machine->reservedMemory, 0, 0x1000);
+    //memset(core->machine->reservedMemory, 0, 0x1000);
     
     memset(core->machineInternals, 0, sizeof(struct MachineInternals));
     audio_reset(core);
@@ -68,7 +68,7 @@ int machine_peek(struct Core *core, int address)
 
 bool machine_poke(struct Core *core, int address, int value)
 {
-    if (address >= 0x10000)
+    if (address < 0 && address >= 0x10000)
     {
         // cartridge ROM or outside RAM
         return false;

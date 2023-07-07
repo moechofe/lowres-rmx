@@ -313,7 +313,7 @@ enum ErrorCode cmd_WINDOW(struct Core *core)
     ++interpreter->pc;
     
     // bg value
-    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 1);
+    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 3);
     if (bgValue.type == ValueTypeError) return bgValue.v.errorCode;
     
     if (interpreter->pass == PassRun)

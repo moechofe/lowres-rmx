@@ -30,8 +30,7 @@
 #define NUM_PALETTES 8
 #define PLANE_COLUMNS 64
 #define PLANE_ROWS 64
-#define NUM_SPRITES 64
-// XXX: #define NUM_SPRITES 256
+#define NUM_SPRITES 256
 #define SPRITE_OFFSET_X 32
 #define SPRITE_OFFSET_Y 32
 
@@ -113,8 +112,12 @@ union DisplayAttributes {
         uint8_t spritesEnabled:1;
         uint8_t planeAEnabled:1;
         uint8_t planeBEnabled:1;
+        uint8_t planeCEnabled:1;
+        uint8_t planeDEnabled:1;
         uint8_t planeACellSize:1;
         uint8_t planeBCellSize:1;
+        uint8_t planeCCellSize:1;
+        uint8_t planeDCellSize:1;
     };
     uint8_t value;
 };
@@ -125,6 +128,10 @@ union ScrollMSB {
         uint8_t aY:1;
         uint8_t bX:1;
         uint8_t bY:1;
+        uint8_t cX:1;
+        uint8_t cY:1;
+        uint8_t dX:1;
+        uint8_t dY:1;
     };
     uint8_t value;
 };
@@ -135,6 +142,10 @@ struct VideoRegisters {
     uint8_t scrollAY;
     uint8_t scrollBX;
     uint8_t scrollBY;
+    uint8_t scrollCX;
+    uint8_t scrollCY;
+    uint8_t scrollDX;
+    uint8_t scrollDY;
     union ScrollMSB scrollMSB;
     uint8_t rasterLine;
 };

@@ -29,7 +29,7 @@ struct Core;
 
 enum ErrorCode cmd_PALETTE(struct Core *core);
 enum ErrorCode cmd_SCROLL(struct Core *core);
-enum ErrorCode cmd_DISPLAY(struct Core *core);
+//enum ErrorCode cmd_DISPLAY(struct Core *core);
 enum ErrorCode cmd_SPRITE_VIEW(struct Core *core);
 enum ErrorCode cmd_BG_VIEW(struct Core *core);
 enum ErrorCode cmd_CELL_SIZE(struct Core *core);

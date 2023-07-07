@@ -30,37 +30,34 @@
 
 #define VM_SIZE 0x20000
 #define VM_MAX 0x1FFFF
-#define PERSISTENT_RAM_SIZE 4096
+#define PERSISTENT_RAM_SIZE 6144
 
 struct Core;
 
-// 64 KB
+// 128Kibi
 struct Machine {
     
-    // 0x00000
+    // 0x00000..0x09000
     struct VideoRam videoRam; // 36Kibi
 
-    // 0x09000 TODO: find usage
-    uint8_t nothing1[0x0A000-0x09000]; // 4Kibi
+    // 0x09000..0x0E000
+    uint8_t workingRam[0x05000]; // 20Kibi
     
-    // 0x0A000
-    uint8_t workingRam[0x04000]; // 16Kibi
+    // 0x0E000..0x0F800
+    uint8_t persistentRam[PERSISTENT_RAM_SIZE]; // 6Kibi
     
-    // 0xE000
-    uint8_t persistentRam[PERSISTENT_RAM_SIZE]; // 4 KB
+    // 0x0F800..0x0FB00
+    uint8_t nothing2[0x0FB00-0x0F800]; // 768
     
-    // 0xF000
-    uint8_t reservedMemory[0xFE00 - 0xF000];
+    // 0x0FB00..0x0FF00
+    struct SpriteRegisters spriteRegisters; // 1Kibi
     
-    // 0xFE00
-    struct SpriteRegisters spriteRegisters; // 256 B
-    
-    // 0xFF00
-    struct ColorRegisters colorRegisters; // 32 B
+    // 0x0FF00
+    struct ColorRegisters colorRegisters; // 32Bytes
     
     // 0xFF20
     struct VideoRegisters videoRegisters;
-    uint8_t reservedVideo[0x20 - sizeof(struct VideoRegisters)];
+    uint8_t nothing3[0x20 - sizeof(struct VideoRegisters)];
     
     // 0xFF40
     struct AudioRegisters audioRegisters;

@@ -32,6 +32,12 @@ struct Plane *txtlib_getBackground(struct TextLib *lib, int bg)
             
         case 1:
             return &lib->core->machine->videoRam.planeB;
+
+        case 2:
+            return &lib->core->machine->videoRam.planeC;
+            
+        case 3:
+            return &lib->core->machine->videoRam.planeD;
             
         case OVERLAY_BG:
             return &lib->core->overlay->plane;

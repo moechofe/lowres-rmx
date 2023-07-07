@@ -189,89 +189,103 @@ struct TypedValue itp_evaluateCharAttributes(struct Core *core, union CharacterA
     }
 }
 
-struct TypedValue itp_evaluateDisplayAttributes(struct Core *core, union DisplayAttributes oldAttr)
-{
-    struct Interpreter *interpreter = core->interpreter;
-    if (interpreter->pc->type == TokenBracketOpen)
-    {
-        // bracket open
-        interpreter->pc++;
+// struct TypedValue itp_evaluateDisplayAttributes(struct Core *core, union DisplayAttributes oldAttr)
+// {
+//     struct Interpreter *interpreter = core->interpreter;
+//     if (interpreter->pc->type == TokenBracketOpen)
+//     {
+//         // bracket open
+//         interpreter->pc++;
         
-        union DisplayAttributes resultAttr = oldAttr;
+//         union DisplayAttributes resultAttr = oldAttr;
         
-        struct TypedValue sValue = {ValueTypeNull, 0};
-        struct TypedValue bg0Value = {ValueTypeNull, 0};
-        struct TypedValue bg1Value = {ValueTypeNull, 0};
-        struct TypedValue bg0SizeValue = {ValueTypeNull, 0};
-        struct TypedValue bg1SizeValue = {ValueTypeNull, 0};
+//         struct TypedValue sValue = {ValueTypeNull, 0};
+//         struct TypedValue bg0Value = {ValueTypeNull, 0};
+//         struct TypedValue bg1Value = {ValueTypeNull, 0};
+//         struct TypedValue bg2Value = {ValueTypeNull, 0};
+//         struct TypedValue bg3Value = {ValueTypeNull, 0};
+//         struct TypedValue bg0SizeValue = {ValueTypeNull, 0};
+//         struct TypedValue bg1SizeValue = {ValueTypeNull, 0};
+//         struct TypedValue bg2SizeValue = {ValueTypeNull, 0};
+//         struct TypedValue bg3SizeValue = {ValueTypeNull, 0};
 
-        // sprites value
-        sValue = itp_evaluateOptionalNumericExpression(core, -1, 1);
-        if (sValue.type == ValueTypeError) return sValue;
+//         // sprites value
+//         sValue = itp_evaluateOptionalNumericExpression(core, -1, 1);
+//         if (sValue.type == ValueTypeError) return sValue;
 
-        // comma
-        if (interpreter->pc->type == TokenComma)
-        {
-            ++interpreter->pc;
+//         // comma
+//         if (interpreter->pc->type == TokenComma)
+//         {
+//             ++interpreter->pc;
             
-            // bg0 value
-            bg0Value = itp_evaluateOptionalNumericExpression(core, -1, 1);
-            if (bg0Value.type == ValueTypeError) return bg0Value;
+//             // bg0 value
+//             bg0Value = itp_evaluateOptionalNumericExpression(core, -1, 1);
+//             if (bg0Value.type == ValueTypeError) return bg0Value;
 
-            // comma
-            if (interpreter->pc->type == TokenComma)
-            {
-                ++interpreter->pc;
+//             // comma
+//             if (interpreter->pc->type == TokenComma)
+//             {
+//                 ++interpreter->pc;
                 
-                // bg1 value
-                bg1Value = itp_evaluateOptionalNumericExpression(core, -1, 1);
-                if (bg1Value.type == ValueTypeError) return bg1Value;
+//                 // bg1 value
+//                 bg1Value = itp_evaluateOptionalNumericExpression(core, -1, 1);
+//                 if (bg1Value.type == ValueTypeError) return bg1Value;
                 
-                // comma
-                if (interpreter->pc->type == TokenComma)
-                {
-                    ++interpreter->pc;
+//                 // comma
+//                 if (interpreter->pc->type == TokenComma)
+//                 {
+//                     ++interpreter->pc;
                     
-                    // bg0 cell size value
-                    bg0SizeValue = itp_evaluateOptionalNumericExpression(core, -1, 1);
-                    if (bg0SizeValue.type == ValueTypeError) return bg0SizeValue;
+//                     // bg0 cell size value
+//                     bg0SizeValue = itp_evaluateOptionalNumericExpression(core, -1, 1);
+//                     if (bg0SizeValue.type == ValueTypeError) return bg0SizeValue;
                     
-                    // comma
-                    if (interpreter->pc->type == TokenComma)
-                    {
-                        ++interpreter->pc;
+//                     // comma
+//                     if (interpreter->pc->type == TokenComma)
+//                     {
+//                         ++interpreter->pc;
                         
-                        // bg1 cell size value
-                        bg1SizeValue = itp_evaluateOptionalNumericExpression(core, -1, 1);
-                        if (bg1SizeValue.type == ValueTypeError) return bg1SizeValue;
-                    }
-                }
-            }
-        }
+//                         // bg1 cell size value
+//                         bg1SizeValue = itp_evaluateOptionalNumericExpression(core, -1, 1);
+//                         if (bg1SizeValue.type == ValueTypeError) return bg1SizeValue;
+
+//                         // comma
+//                         if (interpreter->pc->type == TokenComma)
+//                         {
+//                             ++interpreter->pc;
+                            
+//                             // bg2 cell size value
+//                             bg1SizeValue = itp_evaluateOptionalNumericExpression(core, -1, 1);
+//                             if (bg1SizeValue.type == ValueTypeError) return bg1SizeValue;
+//                         }
+//                     }
+//                 }
+//             }
+//         }
         
-        // bracket close
-        if (interpreter->pc->type != TokenBracketClose) return val_makeError(ErrorSyntax);
-        interpreter->pc++;
+//         // bracket close
+//         if (interpreter->pc->type != TokenBracketClose) return val_makeError(ErrorSyntax);
+//         interpreter->pc++;
         
-        if (interpreter->pass == PassRun)
-        {
-            if (sValue.type != ValueTypeNull) resultAttr.spritesEnabled = sValue.v.floatValue;
-            if (bg0Value.type != ValueTypeNull) resultAttr.planeAEnabled = bg0Value.v.floatValue;
-            if (bg1Value.type != ValueTypeNull) resultAttr.planeBEnabled = bg1Value.v.floatValue;
-            if (bg0SizeValue.type != ValueTypeNull) resultAttr.planeACellSize = bg0SizeValue.v.floatValue;
-            if (bg1SizeValue.type != ValueTypeNull) resultAttr.planeBCellSize = bg1SizeValue.v.floatValue;
-        }
+//         if (interpreter->pass == PassRun)
+//         {
+//             if (sValue.type != ValueTypeNull) resultAttr.spritesEnabled = sValue.v.floatValue;
+//             if (bg0Value.type != ValueTypeNull) resultAttr.planeAEnabled = bg0Value.v.floatValue;
+//             if (bg1Value.type != ValueTypeNull) resultAttr.planeBEnabled = bg1Value.v.floatValue;
+//             if (bg0SizeValue.type != ValueTypeNull) resultAttr.planeACellSize = bg0SizeValue.v.floatValue;
+//             if (bg1SizeValue.type != ValueTypeNull) resultAttr.planeBCellSize = bg1SizeValue.v.floatValue;
+//         }
         
-        struct TypedValue resultValue;
-        resultValue.type = ValueTypeFloat;
-        resultValue.v.floatValue = resultAttr.value;
-        return resultValue;
-    }
-    else
-    {
-        return itp_evaluateNumericExpression(core, 0, 255);
-    }
-}
+//         struct TypedValue resultValue;
+//         resultValue.type = ValueTypeFloat;
+//         resultValue.v.floatValue = resultAttr.value;
+//         return resultValue;
+//     }
+//     else
+//     {
+//         return itp_evaluateNumericExpression(core, 0, 255);
+//     }
+// }
 
 struct TypedValue itp_evaluateLFOAttributes(struct Core *core, union LFOAttributes oldAttr)
 {

@@ -88,7 +88,7 @@ enum ErrorCode cmd_SCROLL(struct Core *core)
     ++interpreter->pc;
     
     // bg value
-    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 1);
+    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 3);
     if (bgValue.type == ValueTypeError) return bgValue.v.errorCode;
     
     // comma
@@ -120,38 +120,52 @@ enum ErrorCode cmd_SCROLL(struct Core *core)
             reg->scrollMSB.aX = (x >> 8) & 1;
             reg->scrollMSB.aY = (y >> 8) & 1;
         }
-        else
+        else if(bg == 1)
         {
             reg->scrollBX = x & 0xFF;
             reg->scrollBY = y & 0xFF;
             reg->scrollMSB.bX = (x >> 8) & 1;
             reg->scrollMSB.bY = (y >> 8) & 1;
         }
+        else if(bg == 2)
+        {
+            reg->scrollCX = x & 0xFF;
+            reg->scrollCY = y & 0xFF;
+            reg->scrollMSB.cX = (x >> 8) & 1;
+            reg->scrollMSB.cY = (y >> 8) & 1;
+        }
+        else if(bg == 3)
+        {
+            reg->scrollDX = x & 0xFF;
+            reg->scrollDY = y & 0xFF;
+            reg->scrollMSB.cX = (x >> 8) & 1;
+            reg->scrollMSB.cY = (y >> 8) & 1;
+        }
     }
     
     return itp_endOfCommand(interpreter);
 }
 
-enum ErrorCode cmd_DISPLAY(struct Core *core)
-{
-    struct Interpreter *interpreter = core->interpreter;
+// enum ErrorCode cmd_DISPLAY(struct Core *core)
+// {
+//     struct Interpreter *interpreter = core->interpreter;
     
-    // DISPLAY
-    ++interpreter->pc;
+//     // DISPLAY
+//     ++interpreter->pc;
     
-    // obsolete syntax!
+//     // obsolete syntax!
     
-    // atrb value
-    struct TypedValue aValue = itp_evaluateDisplayAttributes(core, core->machine->videoRegisters.attr);
-    if (aValue.type == ValueTypeError) return aValue.v.errorCode;
+//     // atrb value
+//     struct TypedValue aValue = itp_evaluateDisplayAttributes(core, core->machine->videoRegisters.attr);
+//     if (aValue.type == ValueTypeError) return aValue.v.errorCode;
     
-    if (interpreter->pass == PassRun)
-    {
-         core->machine->videoRegisters.attr.value = aValue.v.floatValue;
-    }
+//     if (interpreter->pass == PassRun)
+//     {
+//          core->machine->videoRegisters.attr.value = aValue.v.floatValue;
+//     }
     
-    return itp_endOfCommand(interpreter);
-}
+//     return itp_endOfCommand(interpreter);
+// }
 
 enum ErrorCode cmd_SPRITE_VIEW(struct Core *core)
 {

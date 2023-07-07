@@ -1407,8 +1407,8 @@ enum ErrorCode itp_evaluateCommand(struct Core *core)
         case TokenSCROLL:
             return cmd_SCROLL(core);
 
-        case TokenDISPLAY:
-            return cmd_DISPLAY(core);
+        // case TokenDISPLAY:
+        //     return cmd_DISPLAY(core);
             
         case TokenSPRITEA:
             return cmd_SPRITE_A(core);
