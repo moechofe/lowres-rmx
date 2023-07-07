@@ -28,8 +28,8 @@
 #include "video_chip.h"
 #include "audio_chip.h"
 
-#define VM_SIZE 0x10000
-#define VM_MAX 0xFFFF
+#define VM_SIZE 0x20000
+#define VM_MAX 0x1FFFF
 #define PERSISTENT_RAM_SIZE 4096
 
 struct Core;
@@ -38,7 +38,7 @@ struct Core;
 struct Machine {
     
     // 0x0000
-    uint8_t cartridgeRom[0x8000]; // 32 KB
+    uint8_t nothing[0x8000]; // 32 KB
     
     // 0x8000
     struct VideoRam videoRam; // 8 KB
@@ -71,6 +71,10 @@ struct Machine {
     
     // 0xFF80
     uint8_t reservedRegisters[0x10000 - 0xFF80];
+
+    // TODO: move ROM here
+
+    uint8_t cartridgeRom[0x10000]; // 64Kibi
 };
 
 struct MachineInternals {

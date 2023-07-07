@@ -25,6 +25,8 @@
 
 #define FONT_CHAR_OFFSET 192
 
+extern uint32_t better_palette[];
+
 void runStartupSequence(struct Core *core)
 {
     struct DataEntry *entries = core->interpreter->romDataManager.entries;
@@ -43,32 +45,32 @@ void runStartupSequence(struct Core *core)
     // default palettes
     uint8_t *colors = core->machine->colorRegisters.colors;
     
-    colors[0] = (0 << 4) | (1 << 2) | 1;
-    colors[1] = (3 << 4) | (3 << 2) | 3;
-    colors[2] = (2 << 4) | (3 << 2) | 3;
-    colors[3] = (0 << 4) | (0 << 2) | 0;
+    colors[0] = 15;
+    colors[1] = 2;
+    colors[2] = 12;
+    colors[3] = 0;
 
     colors[4] = 0;
-    colors[5] = (3 << 4) | (2 << 2) | 0;
-    colors[6] = (3 << 4) | (1 << 2) | 0;
-    colors[7] = (0 << 4) | (0 << 2) | 0;
+    colors[5] = 29;
+    colors[6] = 31;
+    colors[7] = 0;
     
     colors[8] = 0;
-    colors[9] = (3 << 4) | (3 << 2) | 0;
-    colors[10] = (0 << 4) | (3 << 2) | 0;
-    colors[11] = (0 << 4) | (0 << 2) | 0;
+    colors[9] = 30;
+    colors[10] = 17;
+    colors[11] = 0;
 
     colors[12] = 0;
-    colors[13] = (3 << 4) | (3 << 2) | 3;
-    colors[14] = (3 << 4) | (3 << 2) | 0;
-    colors[15] = (0 << 4) | (0 << 2) | 0;
+    colors[13] = 2;
+    colors[14] = 30;
+    colors[15] = 0;
     
     for (int i = 0; i < 16; i += 4)
     {
         colors[16 + i] = 0;
-        colors[17 + i] = (3 << 4) | (3 << 2) | 3;
-        colors[18 + i] = (2 << 4) | (2 << 2) | 2;
-        colors[19 + i] = (1 << 4) | (1 << 2) | 1;
+        colors[17 + i] = 2;
+        colors[18 + i] = 3;
+        colors[19 + i] = 5;
     }
     
     // main palettes
