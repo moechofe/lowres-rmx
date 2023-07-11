@@ -1152,10 +1152,8 @@ struct TypedValue itp_evaluateFunction(struct Core *core)
         case TokenTOUCHY:
             return fnc_TOUCH_X_Y(core);
 
-        case TokenSHOWNL:
-        case TokenSHOWNT:
-        case TokenSHOWNR:
-        case TokenSHOWNB:
+        case TokenSHOWNW:
+        case TokenSHOWNH:
             return fnc_SHOWN(core);
 
         case TokenSAFEL:
@@ -1448,14 +1446,14 @@ enum ErrorCode itp_evaluateCommand(struct Core *core)
         case TokenFILES:
             return cmd_FILES(core);
             
-        case TokenGAMEPAD:
-            return cmd_GAMEPAD(core);
+        // case TokenGAMEPAD:
+        //     return cmd_GAMEPAD(core);
             
         case TokenKEYBOARD:
             return cmd_KEYBOARD(core);
             
-        case TokenTOUCHSCREEN:
-            return cmd_TOUCHSCREEN(core);
+        // case TokenTOUCHSCREEN:
+        //     return cmd_TOUCHSCREEN(core);
             
         case TokenTRACE:
             return cmd_TRACE(core);

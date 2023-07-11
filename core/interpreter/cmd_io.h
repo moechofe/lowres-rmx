@@ -28,8 +28,8 @@
 struct Core;
 
 enum ErrorCode cmd_KEYBOARD(struct Core *core);
-enum ErrorCode cmd_TOUCHSCREEN(struct Core *core);
-enum ErrorCode cmd_GAMEPAD(struct Core *core);
+//enum ErrorCode cmd_TOUCHSCREEN(struct Core *core);
+//enum ErrorCode cmd_GAMEPAD(struct Core *core);
 enum ErrorCode cmd_PAUSE(struct Core *core);
 struct TypedValue fnc_UP_DOWN_LEFT_RIGHT(struct Core *core);
 struct TypedValue fnc_BUTTON(struct Core *core);

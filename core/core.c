@@ -64,6 +64,8 @@ void core_init(struct Core *core)
     ioRegisters->safe.right=216;
     ioRegisters->safe.bottom=384;
 
+    ioRegisters->attr.touchEnabled=1;
+
     machine_init(core);
     itp_init(core);
     overlay_init(core);
