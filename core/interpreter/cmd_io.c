@@ -272,8 +272,6 @@ struct TypedValue fnc_TOUCH(struct Core *core)
     
     if (interpreter->pass == PassRun)
     {
-        if (core->machine->ioRegisters.attr.touchEnabled == 0) return val_makeError(ErrorTouchNotEnabled);
-        
         value.v.floatValue = core->machine->ioRegisters.status.touch ? BAS_TRUE : BAS_FALSE;
     }
     return value;
@@ -320,6 +318,83 @@ struct TypedValue fnc_TOUCH_X_Y(struct Core *core)
         else if (type == TokenTOUCHY)
         {
             value.v.floatValue = core->machine->ioRegisters.touchY;
+        }
+        else
+        {
+            assert(0);
+        }
+    }
+    return value;
+}
+
+
+struct TypedValue fnc_SHOWN(struct Core *core)
+{
+    struct Interpreter *interpreter = core->interpreter;
+    
+    // SHOWN.?
+    enum TokenType type = interpreter->pc->type;
+    ++interpreter->pc;
+    
+    struct TypedValue value;
+    value.type = ValueTypeFloat;
+    
+    if (interpreter->pass == PassRun)
+    {
+        if (type == TokenSHOWNL)
+        {
+            value.v.floatValue = core->machine->ioRegisters.shown.left;
+        }
+        else if (type == TokenSHOWNT)
+        {
+            value.v.floatValue = core->machine->ioRegisters.shown.top;
+        }
+        else if (type == TokenSHOWNR)
+        {
+            value.v.floatValue = core->machine->ioRegisters.shown.right;
+        }
+        else if (type == TokenSHOWNB)
+        {
+            value.v.floatValue = core->machine->ioRegisters.shown.bottom;
+        }
+        else
+        {
+            assert(0);
+        }
+    }
+    return value;
+}
+
+struct TypedValue fnc_SAFE(struct Core *core)
+{
+    struct Interpreter *interpreter = core->interpreter;
+    
+    // SAFE.?
+    enum TokenType type = interpreter->pc->type;
+    ++interpreter->pc;
+    
+    struct TypedValue value;
+    value.type = ValueTypeFloat;
+    
+    if (interpreter->pass == PassRun)
+    {
+        if (core->machine->ioRegisters.attr.touchEnabled == 0) return val_makeError(ErrorTouchNotEnabled);
+        
+        if (type == TokenSAFEL)
+        {
+            value.v.floatValue = core->machine->ioRegisters.safe.left;
+        }
+        else if (type == TokenSAFET)
+        {
+            value.v.floatValue = core->machine->ioRegisters.safe.top;
+        }
+        else if (type == TokenSAFER)
+        {
+            value.v.floatValue = core->machine->ioRegisters.safe.right;
+        }
+        else if (type == TokenSAFEB)
+        {
+            value.v.floatValue = core->machine->ioRegisters.safe.bottom;
         }
         else
         {

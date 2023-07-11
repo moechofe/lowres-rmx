@@ -1151,6 +1151,18 @@ struct TypedValue itp_evaluateFunction(struct Core *core)
         case TokenTOUCHX:
         case TokenTOUCHY:
             return fnc_TOUCH_X_Y(core);
+
+        case TokenSHOWNL:
+        case TokenSHOWNT:
+        case TokenSHOWNR:
+        case TokenSHOWNB:
+            return fnc_SHOWN(core);
+
+        case TokenSAFEL:
+        case TokenSAFET:
+        case TokenSAFER:
+        case TokenSAFEB:
+            return fnc_SAFE(core);
             
         case TokenFILE:
             return fnc_FILE(core);

@@ -30,12 +30,19 @@
 #define NUM_PALETTES 8
 #define PLANE_COLUMNS 64
 #define PLANE_ROWS 64
-#define NUM_SPRITES 256
+#define NUM_SPRITES 170
 #define SPRITE_OFFSET_X 32
 #define SPRITE_OFFSET_Y 32
 
 #define COLS_MASK (PLANE_COLUMNS-1)
 #define ROWS_MASK (PLANE_ROWS-1)
+
+#if __APPLE__
+#include <TargetConditionals.h>
+#if TARGET_OS_IPHONE
+#define BGR 1
+#endif
+#endif
 
 struct Core;
 
@@ -59,10 +66,10 @@ union CharacterAttributes {
     uint8_t value;
 };
 
-// 4 bytes
+// 6 bytes
 struct Sprite {
-    uint8_t x;
-    uint8_t y;
+    uint16_t x;
+    uint16_t y;
     uint8_t character;
     union CharacterAttributes attr;
 };
@@ -147,7 +154,7 @@ struct VideoRegisters {
     uint8_t scrollDX;
     uint8_t scrollDY;
     union ScrollMSB scrollMSB;
-    uint8_t rasterLine;
+    uint16_t rasterLine;
 };
 
 // ===========================================

@@ -359,8 +359,8 @@ void txtlib_clearScreen(struct TextLib *lib)
     
     lib->windowX = 0;
     lib->windowY = 0;
-    lib->windowWidth = 20;
-    lib->windowHeight = 16;
+    lib->windowWidth = 27;
+    lib->windowHeight = 48;
     lib->cursorX = 0;
     lib->cursorY = 0;
     lib->bg = 0;

@@ -214,6 +214,15 @@ enum TokenType {
     TokenWHILE,
     TokenWINDOW,
     
+    TokenSHOWNL,
+    TokenSHOWNT,
+    TokenSHOWNR,
+    TokenSHOWNB,
+    TokenSAFEL,
+    TokenSAFET,
+    TokenSAFER,
+    TokenSAFEB,
+
     // Reserved Keywords
     Token_reserved,
     TokenANIM,

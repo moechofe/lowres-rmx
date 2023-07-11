@@ -1,0 +1,33 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "make",
+            "options": {
+                "cwd": "${workspaceFolder}/platform/Linux"
+            },
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "${workspaceFolder}/platform/Linux/output/LowResNX",
+            "args": ["my/empty.nx"],
+
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": ["make"]
+        }
+    ]
+}

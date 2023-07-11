@@ -66,8 +66,8 @@ enum ErrorCode cmd_SPRITE(struct Core *core)
         {
             int n = nValue.v.floatValue;
             struct Sprite *sprite = &core->machine->spriteRegisters.sprites[n];
-            if (xValue.type != ValueTypeNull) sprite->x = ((int)xValue.v.floatValue + SPRITE_OFFSET_X) & 0xFF;
-            if (yValue.type != ValueTypeNull) sprite->y = ((int)yValue.v.floatValue + SPRITE_OFFSET_Y) & 0xFF;
+            if (xValue.type != ValueTypeNull) sprite->x = ((int)xValue.v.floatValue + SPRITE_OFFSET_X) & 0x1FF;
+            if (yValue.type != ValueTypeNull) sprite->y = ((int)yValue.v.floatValue + SPRITE_OFFSET_Y) & 0x1FF;
             if (cValue.type != ValueTypeNull) sprite->character = cValue.v.floatValue;
         }
     }

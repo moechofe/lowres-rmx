@@ -65,12 +65,14 @@ union IOAttributes {
 // ===============================================
 
 struct IORegisters {
+    // TODO: remove gamepad
     union Gamepad gamepads[NUM_GAMEPADS]; // 2 bytes
     float touchX;
     float touchY;
     char key;
     union IOStatus status;
     union IOAttributes attr;
+    struct {int left,top,right,bottom;} shown,safe;
 };
 
 #endif /* io_chip_h */

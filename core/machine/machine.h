@@ -51,6 +51,7 @@ struct Machine {
     
     // 0x0FB00..0x0FF00
     struct SpriteRegisters spriteRegisters; // 1Kibi
+    uint8_t nothing4[0x400 - sizeof(struct SpriteRegisters)];
     
     // 0x0FF00
     struct ColorRegisters colorRegisters; // 32Bytes
@@ -64,10 +65,10 @@ struct Machine {
     
     // 0xFF70
     struct IORegisters ioRegisters;
-    uint8_t reservedIO[0x10 - sizeof(struct IORegisters)];
+    uint8_t reservedIO[0x30 - sizeof(struct IORegisters)];
     
-    // 0xFF80
-    uint8_t reservedRegisters[0x10000 - 0xFF80];
+    // 0xFFA0
+    uint8_t reservedRegisters[0x10000 - 0xFFA0];
 
     // 0x10000..0x20000
     uint8_t cartridgeRom[0x10000]; // 64Kibi

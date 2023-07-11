@@ -53,7 +53,17 @@ void core_init(struct Core *core)
     
     core->overlay = calloc(1, sizeof(struct Overlay));
     if (!core->overlay) exit(EXIT_FAILURE);
-    
+
+    struct IORegisters *ioRegisters = &core->machine->ioRegisters;
+    ioRegisters->shown.left=0;
+    ioRegisters->shown.top=0;
+    ioRegisters->shown.right=216;
+    ioRegisters->shown.bottom=384;
+    ioRegisters->safe.left=0;
+    ioRegisters->safe.top=0;
+    ioRegisters->safe.right=216;
+    ioRegisters->safe.bottom=384;
+
     machine_init(core);
     itp_init(core);
     overlay_init(core);
@@ -181,35 +191,41 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
         ioRegisters->status.touch = 0;
     }
     
-    for (int i = 0; i < NUM_GAMEPADS; i++)
-    {
-        union Gamepad *gamepad = &ioRegisters->gamepads[i];
-        if (ioAttr.gamepadsEnabled > i && !ioAttr.keyboardEnabled)
-        {
-            struct CoreInputGamepad *inputGamepad = &input->gamepads[i];
-            gamepad->up = inputGamepad->up && !inputGamepad->down;
-            gamepad->down = inputGamepad->down && !inputGamepad->up;
-            gamepad->left = inputGamepad->left && !inputGamepad->right;
-            gamepad->right = inputGamepad->right && !inputGamepad->left;
-            gamepad->buttonA = inputGamepad->buttonA;
-            gamepad->buttonB = inputGamepad->buttonB;
-            
-            if (inputGamepad->up || inputGamepad->down || inputGamepad->left || inputGamepad->right)
-            {
-                // some d-pad combinations are not registered as I/O, but mark them anyway.
-                processedOtherInput = true;
-            }
-            
-            if (gamepad->value)
-            {
-                machine_suspendEnergySaving(core, 2);
-            }
-        }
-        else
-        {
-            gamepad->value = 0;
-        }
-    }
+    ioRegisters->shown.left = input->shown.left;
+    ioRegisters->shown.top = input->shown.top;
+    ioRegisters->shown.right = input->shown.right;
+    ioRegisters->shown.bottom = input->shown.bottom;
+    
+//
+//    for (int i = 0; i < NUM_GAMEPADS; i++)
+//    {
+//        union Gamepad *gamepad = &ioRegisters->gamepads[i];
+//        if (ioAttr.gamepadsEnabled > i && !ioAttr.keyboardEnabled)
+//        {
+//            struct CoreInputGamepad *inputGamepad = &input->gamepads[i];
+//            gamepad->up = inputGamepad->up && !inputGamepad->down;
+//            gamepad->down = inputGamepad->down && !inputGamepad->up;
+//            gamepad->left = inputGamepad->left && !inputGamepad->right;
+//            gamepad->right = inputGamepad->right && !inputGamepad->left;
+//            gamepad->buttonA = inputGamepad->buttonA;
+//            gamepad->buttonB = inputGamepad->buttonB;
+//
+//            if (inputGamepad->up || inputGamepad->down || inputGamepad->left || inputGamepad->right)
+//            {
+//                // some d-pad combinations are not registered as I/O, but mark them anyway.
+//                processedOtherInput = true;
+//            }
+//
+//            if (gamepad->value)
+//            {
+//                machine_suspendEnergySaving(core, 2);
+//            }
+//        }
+//        else
+//        {
+//            gamepad->value = 0;
+//        }
+//    }
     
     if (input->pause)
     {

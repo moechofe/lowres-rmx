@@ -209,6 +209,15 @@ const char *TokenStrings[] = {
     "WEND",
     "WHILE",
     "WINDOW",
+
+    "SHOWN.L",
+    "SHOWN.T",
+    "SHOWN.R",
+    "SHOWN.B",
+    "SAFE.L",
+    "SAFE.T",
+    "SAFE.R",
+    "SAFE.B",
     
     // Reserved Keywords
     NULL,

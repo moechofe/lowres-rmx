@@ -14,6 +14,10 @@ find_package(SDL2 REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} SDL2::Main)
 
+if(APPLE)
+	target_include_directories(${PROJECT_NAME} PRIVATE /opt/homebrew/Cellar/sdl2/2.28.1/include/)
+endif()
+
 if(NOT MSVC)
 	target_link_libraries(${PROJECT_NAME} m)
 endif()
