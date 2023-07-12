@@ -55,14 +55,12 @@ void core_init(struct Core *core)
     if (!core->overlay) exit(EXIT_FAILURE);
 
     struct IORegisters *ioRegisters = &core->machine->ioRegisters;
-    ioRegisters->shown.left=0;
-    ioRegisters->shown.top=0;
-    ioRegisters->shown.right=216;
-    ioRegisters->shown.bottom=384;
-    ioRegisters->safe.left=0;
-    ioRegisters->safe.top=0;
-    ioRegisters->safe.right=216;
-    ioRegisters->safe.bottom=384;
+    // ioRegisters->shown.width=216;
+    // ioRegisters->shown.height=384;
+    // ioRegisters->safe.left=0;
+    // ioRegisters->safe.top=0;
+    // ioRegisters->safe.right=0;
+    // ioRegisters->safe.bottom=0;
 
     ioRegisters->attr.touchEnabled=1;
 
@@ -143,6 +141,7 @@ void core_update(struct Core *core, struct CoreInput *input)
     itp_runInterrupt(core, InterruptTypeVBL);
     itp_runProgram(core);
     itp_didFinishVBL(core);
+    overlay_updateLayout(core, input);
     overlay_draw(core, true);
     audio_bufferRegisters(core);
 }
@@ -193,10 +192,13 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
         ioRegisters->status.touch = 0;
     }
     
-    ioRegisters->shown.left = input->shown.left;
-    ioRegisters->shown.top = input->shown.top;
-    ioRegisters->shown.right = input->shown.right;
-    ioRegisters->shown.bottom = input->shown.bottom;
+    ioRegisters->shown.width = input->shown.width;
+    ioRegisters->shown.height = input->shown.height;
+
+    ioRegisters->safe.right = input->safe.right;
+    ioRegisters->safe.top = input->safe.top;
+    ioRegisters->safe.left = input->safe.left;
+    ioRegisters->safe.bottom = input->safe.bottom;
     
 //
 //    for (int i = 0; i < NUM_GAMEPADS; i++)

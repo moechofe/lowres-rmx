@@ -120,7 +120,7 @@ enum TokenType {
     TokenINT,
     TokenKEYBOARD,
     TokenLEFTStr,
-    TokenLEFT,
+    //TokenLEFT,
     TokenLEN,
     TokenLET,
     TokenLFOA,

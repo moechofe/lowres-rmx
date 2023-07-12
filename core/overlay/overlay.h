@@ -26,6 +26,7 @@
 #include "video_chip.h"
 #include "overlay_data.h"
 #include "text_lib.h"
+#include "core.h"
 
 struct Core;
 
@@ -38,6 +39,7 @@ struct Overlay {
 
 void overlay_init(struct Core *core);
 void overlay_reset(struct Core *core);
+void overlay_updateLayout(struct Core *core, struct CoreInput *input);
 void overlay_updateState(struct Core *core);
 void overlay_message(struct Core *core, const char *message);
 void overlay_draw(struct Core *core, bool ingame);

@@ -1121,11 +1121,11 @@ struct TypedValue itp_evaluateFunction(struct Core *core)
         case TokenCURSORY:
             return fnc_CURSOR(core);
             
-        case TokenUP:
-        case TokenDOWN:
-        case TokenLEFT:
-        case TokenRIGHT:
-            return fnc_UP_DOWN_LEFT_RIGHT(core);
+        // case TokenUP:
+        // case TokenDOWN:
+        // case TokenLEFT:
+        // case TokenRIGHT:
+        //     return fnc_UP_DOWN_LEFT_RIGHT(core);
             
         case TokenBUTTON:
             return fnc_BUTTON(core);

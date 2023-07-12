@@ -116,7 +116,7 @@ const char *TokenStrings[] = {
     "INT",
     "KEYBOARD",
     "LEFT$",
-    "LEFT",
+    //"LEFT",
     "LEN",
     "LET",
     "LFO.A",

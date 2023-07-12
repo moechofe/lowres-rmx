@@ -113,6 +113,9 @@ int volume = 0; // 0 = max, it's a bit shift
 int main(int argc, const char * argv[])
 {
     memset(&coreInput, 0, sizeof(struct CoreInput));
+
+    coreInput.shown.width=216;
+    coreInput.shown.height=384;
     
     settings_init(&settings, mainProgramFilename, argc, argv);
     runner_init(&runner);
@@ -459,22 +462,22 @@ void update(void *arg)
                 {
                     coreInput.key = CoreInputKeyBackspace;
                 }
-                else if (scancode == SDL_SCANCODE_UP)
-                {
-                    coreInput.key = CoreInputKeyUp;
-                }
-                else if (scancode == SDL_SCANCODE_DOWN)
-                {
-                    coreInput.key = CoreInputKeyDown;
-                }
-                else if (scancode == SDL_SCANCODE_LEFT)
-                {
-                    coreInput.key = CoreInputKeyLeft;
-                }
-                else if (scancode == SDL_SCANCODE_RIGHT)
-                {
-                    coreInput.key = CoreInputKeyRight;
-                }
+                // else if (scancode == SDL_SCANCODE_UP)
+                // {
+                //     coreInput.key = CoreInputKeyUp;
+                // }
+                // else if (scancode == SDL_SCANCODE_DOWN)
+                // {
+                //     coreInput.key = CoreInputKeyDown;
+                // }
+                // else if (scancode == SDL_SCANCODE_LEFT)
+                // {
+                //     coreInput.key = CoreInputKeyLeft;
+                // }
+                // else if (scancode == SDL_SCANCODE_RIGHT)
+                // {
+                //     coreInput.key = CoreInputKeyRight;
+                // }
                 
                 // console buttons
                 if (keycode == SDLK_RETURN || keycode == SDLK_p)
@@ -639,10 +642,10 @@ void update(void *arg)
             Uint8 hat = SDL_JoystickGetHat(joy, 0);
             Sint16 axisX = SDL_JoystickGetAxis(joy, 0);
             Sint16 axisY = SDL_JoystickGetAxis(joy, 1);
-            gamepad->up = (hat & SDL_HAT_UP) != 0 || axisY < -joyAxisThreshold;
-            gamepad->down = (hat & SDL_HAT_DOWN) != 0 || axisY > joyAxisThreshold;
-            gamepad->left = (hat & SDL_HAT_LEFT) != 0 || axisX < -joyAxisThreshold;
-            gamepad->right = (hat & SDL_HAT_RIGHT) != 0 || axisX > joyAxisThreshold;
+            // gamepad->up = (hat & SDL_HAT_UP) != 0 || axisY < -joyAxisThreshold;
+            // gamepad->down = (hat & SDL_HAT_DOWN) != 0 || axisY > joyAxisThreshold;
+            // gamepad->left = (hat & SDL_HAT_LEFT) != 0 || axisX < -joyAxisThreshold;
+            // gamepad->right = (hat & SDL_HAT_RIGHT) != 0 || axisX > joyAxisThreshold;
             gamepad->buttonA = SDL_JoystickGetButton(joy, 0);
             gamepad->buttonB = SDL_JoystickGetButton(joy, 1);
         }
@@ -650,10 +653,10 @@ void update(void *arg)
         {
             int ci = i - numJoysticks;
             int m = settings.session.mapping;
-            gamepad->up = state[keyboardControls[m][ci][0]];
-            gamepad->down = state[keyboardControls[m][ci][1]];
-            gamepad->left = state[keyboardControls[m][ci][2]];
-            gamepad->right = state[keyboardControls[m][ci][3]];
+            // gamepad->up = state[keyboardControls[m][ci][0]];
+            // gamepad->down = state[keyboardControls[m][ci][1]];
+            // gamepad->left = state[keyboardControls[m][ci][2]];
+            // gamepad->right = state[keyboardControls[m][ci][3]];
             gamepad->buttonA = state[keyboardControls[m][ci][4]] || state[keyboardControls[m][ci][6]];
             gamepad->buttonB = state[keyboardControls[m][ci][5]] || state[keyboardControls[m][ci][7]];
         }

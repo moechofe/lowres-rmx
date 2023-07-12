@@ -122,76 +122,76 @@ enum ErrorCode cmd_PAUSE(struct Core *core)
     return itp_endOfCommand(interpreter);
 }
 
-struct TypedValue fnc_UP_DOWN_LEFT_RIGHT(struct Core *core)
-{
-    struct Interpreter *interpreter = core->interpreter;
+// struct TypedValue fnc_UP_DOWN_LEFT_RIGHT(struct Core *core)
+// {
+//     struct Interpreter *interpreter = core->interpreter;
     
-    // UP/DOWN/LEFT/RIGHT
-    enum TokenType type = interpreter->pc->type;
-    ++interpreter->pc;
+//     // UP/DOWN/LEFT/RIGHT
+//     enum TokenType type = interpreter->pc->type;
+//     ++interpreter->pc;
     
-    // TAP
-    bool tap = false;
-    if (interpreter->pc->type == TokenTAP)
-    {
-        ++interpreter->pc;
-        tap = true;
-    }
+//     // TAP
+//     bool tap = false;
+//     if (interpreter->pc->type == TokenTAP)
+//     {
+//         ++interpreter->pc;
+//         tap = true;
+//     }
     
-    // bracket open
-    if (interpreter->pc->type != TokenBracketOpen) return val_makeError(ErrorSyntax);
-    ++interpreter->pc;
+//     // bracket open
+//     if (interpreter->pc->type != TokenBracketOpen) return val_makeError(ErrorSyntax);
+//     ++interpreter->pc;
     
-    // p expression
-    struct TypedValue pValue = itp_evaluateNumericExpression(core, 0, 1);
-    if (pValue.type == ValueTypeError) return pValue;
+//     // p expression
+//     struct TypedValue pValue = itp_evaluateNumericExpression(core, 0, 1);
+//     if (pValue.type == ValueTypeError) return pValue;
     
-    // bracket close
-    if (interpreter->pc->type != TokenBracketClose) return val_makeError(ErrorSyntax);
-    ++interpreter->pc;
+//     // bracket close
+//     if (interpreter->pc->type != TokenBracketClose) return val_makeError(ErrorSyntax);
+//     ++interpreter->pc;
     
-    struct TypedValue value;
-    value.type = ValueTypeFloat;
+//     struct TypedValue value;
+//     value.type = ValueTypeFloat;
     
-    if (interpreter->pass == PassRun)
-    {
-        if (core->machine->ioRegisters.attr.gamepadsEnabled == 0) return val_makeError(ErrorGamepadNotEnabled);
+//     if (interpreter->pass == PassRun)
+//     {
+//         if (core->machine->ioRegisters.attr.gamepadsEnabled == 0) return val_makeError(ErrorGamepadNotEnabled);
         
-        int p = pValue.v.floatValue;
-        int active = 0;
-        int lastFrameActive = 0;
-        union Gamepad *gamepad = &core->machine->ioRegisters.gamepads[p];
-        union Gamepad *lastFrameGamepad = &core->interpreter->lastFrameGamepads[p];
-        switch (type)
-        {
-            case TokenUP:
-                active = gamepad->up;
-                lastFrameActive = lastFrameGamepad->up;
-                break;
+//         int p = pValue.v.floatValue;
+//         int active = 0;
+//         int lastFrameActive = 0;
+//         union Gamepad *gamepad = &core->machine->ioRegisters.gamepads[p];
+//         union Gamepad *lastFrameGamepad = &core->interpreter->lastFrameGamepads[p];
+//         switch (type)
+//         {
+//             case TokenUP:
+//                 active = gamepad->up;
+//                 lastFrameActive = lastFrameGamepad->up;
+//                 break;
                 
-            case TokenDOWN:
-                active = gamepad->down;
-                lastFrameActive = lastFrameGamepad->down;
-                break;
+//             case TokenDOWN:
+//                 active = gamepad->down;
+//                 lastFrameActive = lastFrameGamepad->down;
+//                 break;
 
-            case TokenLEFT:
-                active = gamepad->left;
-                lastFrameActive = lastFrameGamepad->left;
-                break;
+//             case TokenLEFT:
+//                 active = gamepad->left;
+//                 lastFrameActive = lastFrameGamepad->left;
+//                 break;
 
-            case TokenRIGHT:
-                active = gamepad->right;
-                lastFrameActive = lastFrameGamepad->right;
-                break;
+//             case TokenRIGHT:
+//                 active = gamepad->right;
+//                 lastFrameActive = lastFrameGamepad->right;
+//                 break;
                 
-            default:
-                assert(0);
-                break;
-        }
-        value.v.floatValue = active && !(tap && lastFrameActive) ? BAS_TRUE : BAS_FALSE;
-    }
-    return value;
-}
+//             default:
+//                 assert(0);
+//                 break;
+//         }
+//         value.v.floatValue = active && !(tap && lastFrameActive) ? BAS_TRUE : BAS_FALSE;
+//     }
+//     return value;
+// }
 
 struct TypedValue fnc_BUTTON(struct Core *core)
 {
@@ -343,11 +343,11 @@ struct TypedValue fnc_SHOWN(struct Core *core)
     {
         if (type == TokenSHOWNW)
         {
-            value.v.floatValue = core->machine->ioRegisters.shown.right;
+            value.v.floatValue = core->machine->ioRegisters.shown.width;
         }
         else if (type == TokenSHOWNH)
         {
-            value.v.floatValue = core->machine->ioRegisters.shown.bottom;
+            value.v.floatValue = core->machine->ioRegisters.shown.height;
         }
         else
         {

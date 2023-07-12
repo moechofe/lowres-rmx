@@ -72,7 +72,8 @@ struct IORegisters {
     char key;
     union IOStatus status;
     union IOAttributes attr;
-    struct {int left,top,right,bottom;} shown,safe;
+    struct {int width,height;} shown;
+    struct {int left,top,right,bottom;} safe;
 };
 
 #endif /* io_chip_h */

@@ -28,6 +28,7 @@ void overlay_clear(struct Core *core);
 
 void overlay_init(struct Core *core)
 {
+    struct IORegisters *io = &core->machine->ioRegisters;
     struct TextLib *lib = &core->overlay->textLib;
     lib->core = core;
     lib->bg = OVERLAY_BG;
@@ -37,10 +38,20 @@ void overlay_init(struct Core *core)
     lib->fontCharOffset = 0;
     lib->windowX = 0;
     lib->windowY = 0;
-    lib->windowWidth = 20;
-    lib->windowHeight = 16;
+    lib->windowWidth = 216/8;
+    lib->windowHeight = 384/8;
     lib->cursorX = 0;
     lib->cursorY = 0;
+}
+
+void overlay_updateLayout(struct Core *core, struct CoreInput *input)
+{
+    struct IORegisters *io = &core->machine->ioRegisters;
+    struct TextLib *lib = &core->overlay->textLib;
+    lib->windowX = (io->safe.left+7)/8;
+    lib->windowY = (io->safe.top+7)/8;
+    lib->windowWidth = io->shown.width/8 - (io->safe.left+7)/8 - (io->safe.right+7)/8;
+    lib->windowHeight = io->shown.height/8 - (io->safe.top+7)/8 - (io->safe.bottom+7)/8;
 }
 
 void overlay_reset(struct Core *core)
@@ -106,16 +117,16 @@ void overlay_draw(struct Core *core, bool ingame)
         
         if (core->interpreter->debug)
         {
-            txtlib_writeText(lib, "CPU", 17, 0);
+            txtlib_writeText(lib, "CPU", lib->windowWidth-3+lib->windowX, lib->windowY);
             int cpuLoad = core->interpreter->cpuLoadDisplay;
             if (cpuLoad < 100)
             {
-                txtlib_writeNumber(lib, cpuLoad, 2, 17, 1);
-                txtlib_writeText(lib, "%", 19, 1);
+                txtlib_writeNumber(lib, cpuLoad, 2, lib->windowWidth-3+lib->windowX, 1+lib->windowY);
+                txtlib_writeText(lib, "%", lib->windowWidth-1+lib->windowX, 1+lib->windowY);
             }
             else
             {
-                txtlib_writeText(lib, "MAX", 17, 1);
+                txtlib_writeText(lib, "MAX", lib->windowWidth-3+lib->windowX, 1+lib->windowY);
             }
         }
     }
