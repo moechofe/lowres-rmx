@@ -80,8 +80,11 @@ void overlay_updateState(struct Core *core)
 void overlay_message(struct Core *core, const char *message)
 {
     struct TextLib *lib = &core->overlay->textLib;
-    txtlib_setCells(lib, 0, 15, 19, 15, 0);
-    txtlib_writeText(lib, message, 0, 15);
+    txtlib_setCells(lib,
+        0, lib->windowHeight-1+lib->windowY, 
+        lib->windowWidth-1, lib->windowHeight-1+lib->windowY, 
+        0);
+    txtlib_writeText(lib, message, lib->windowX, lib->windowHeight-1+lib->windowY);
     core->overlay->messageTimer = 120;
     machine_suspendEnergySaving(core, 120);
 }
@@ -95,8 +98,13 @@ void overlay_draw(struct Core *core, bool ingame)
         core->overlay->messageTimer--;
         if (core->overlay->messageTimer < 20)
         {
-            txtlib_scrollBackground(lib, 0, 15, 19, 15, -1, 0);
-            txtlib_setCell(lib, 19, 15, 0);
+            txtlib_scrollBackground(lib, 
+                0, lib->windowHeight-1+lib->windowY, 
+                lib->windowWidth-1, lib->windowHeight-1+lib->windowY, 
+                -1, 0);
+            txtlib_setCell(lib, 
+                lib->windowWidth-1+lib->windowX, lib->windowHeight-1+lib->windowY, 
+                0);
         }
     }
     

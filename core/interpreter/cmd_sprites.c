@@ -64,6 +64,16 @@ enum ErrorCode cmd_SPRITE(struct Core *core)
 
         if (interpreter->pass == PassRun)
         {
+            // User entry       Saved value
+            // ----------------------------
+            // 0                0x0
+            // 1                0x10        0b_0001_0000
+            // 0.9375   *x16    0xf         0b_0000_1111
+            // 0.5                          0b_0000_1000
+            // 0.25
+            // 0.125
+            // 0.0625                       0b_0000_0001        
+            
             int n = nValue.v.floatValue;
             struct Sprite *sprite = &core->machine->spriteRegisters.sprites[n];
             if (xValue.type != ValueTypeNull) sprite->x = ((int)xValue.v.floatValue + SPRITE_OFFSET_X) & 0x1FF;
@@ -93,6 +103,7 @@ enum ErrorCode cmd_SPRITE(struct Core *core)
     return itp_endOfCommand(interpreter);
 }
 
+// TODO: disable
 enum ErrorCode cmd_SPRITE_A(struct Core *core)
 {
     struct Interpreter *interpreter = core->interpreter;

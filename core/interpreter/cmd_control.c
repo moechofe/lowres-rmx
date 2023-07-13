@@ -512,56 +512,136 @@ enum ErrorCode cmd_ON(struct Core *core)
     ++interpreter->pc;
     
     // RASTER/VBL
-    enum TokenType type = interpreter->pc->type;
-    if (type != TokenRASTER && type != TokenVBL) return ErrorSyntax;
-    ++interpreter->pc;
-    
-    if (interpreter->pc->type == TokenOFF)
+    if (interpreter->pc->type == TokenRASTER || interpreter->pc->type == TokenVBL)
     {
-        // OFF
+        enum TokenType type = interpreter->pc->type;
         ++interpreter->pc;
-        
-        if (interpreter->pass == PassRun)
+
+        if (interpreter->pc->type == TokenOFF)
         {
-            if (type == TokenRASTER)
+            // OFF
+            ++interpreter->pc;
+            
+            if (interpreter->pass == PassRun)
             {
-                interpreter->currentOnRasterToken = NULL;
+                if (type == TokenRASTER)
+                {
+                    interpreter->currentOnRasterToken = NULL;
+                }
+                else if (type == TokenVBL)
+                {
+                    interpreter->currentOnVBLToken = NULL;
+                }
             }
-            else if (type == TokenVBL)
+        }
+        else if(interpreter->pc->type == TokenCALL)
+        {
+            // CALL
+            // if (interpreter->pc->type != TokenCALL) return ErrorSyntax;
+            struct Token *tokenCALL = interpreter->pc;
+            ++interpreter->pc;
+            
+            // Identifier
+            if (interpreter->pc->type != TokenIdentifier) return ErrorExpectedSubprogramName;
+            struct Token *tokenIdentifier = interpreter->pc;
+            ++interpreter->pc;
+            
+            if (interpreter->pass == PassPrepare)
             {
-                interpreter->currentOnVBLToken = NULL;
+                struct SubItem *item = tok_getSub(&interpreter->tokenizer, tokenIdentifier->symbolIndex);
+                if (!item) return ErrorUndefinedSubprogram;
+                tokenCALL->jumpToken = item->token;
+            }
+            else if (interpreter->pass == PassRun)
+            {
+                if (type == TokenRASTER)
+                {
+                    interpreter->currentOnRasterToken = tokenCALL->jumpToken;
+                }
+                else if (type == TokenVBL)
+                {
+                    interpreter->currentOnVBLToken = tokenCALL->jumpToken;
+                }
             }
         }
     }
     else
     {
-        // CALL
-        if (interpreter->pc->type != TokenCALL) return ErrorSyntax;
-        struct Token *tokenCALL = interpreter->pc;
-        ++interpreter->pc;
-        
+        // n value
+        struct TypedValue nValue = itp_evaluateNumericExpression(core, 0, 255);
+        if (nValue.type == ValueTypeError) return nValue.v.errorCode;
+        int n = nValue.v.floatValue;
+
+        struct Token *tokenGOTO = NULL;
+        struct Token *tokenGOSUB = NULL;
+
+        if (interpreter->pc->type == TokenGOTO)
+        {
+            tokenGOTO = interpreter->pc;
+            ++interpreter->pc;
+
+        }
+        else if(interpreter->pc->type == TokenGOSUB)
+        {
+            tokenGOSUB = interpreter->pc;
+            ++interpreter->pc;
+        }
+        else
+        {
+            return ErrorSyntax;
+        }
+
+        while(n > 0)
+        {
+            ++interpreter->pc;
+            if (interpreter->pc->type != TokenComma) return ErrorSyntax;
+            ++interpreter->pc;
+            --n;
+        }
+
         // Identifier
-        if (interpreter->pc->type != TokenIdentifier) return ErrorExpectedSubprogramName;
+        if (interpreter->pc->type != TokenIdentifier) return ErrorExpectedLabel;
         struct Token *tokenIdentifier = interpreter->pc;
         ++interpreter->pc;
+
+        while(interpreter->pc->type == TokenComma)
+        {
+            ++interpreter->pc;
+            if (interpreter->pc->type != TokenIdentifier) return ErrorSyntax;
+            ++interpreter->pc;
+        }
         
-        if (interpreter->pass == PassPrepare)
+        if (tokenGOTO)
         {
-            struct SubItem *item = tok_getSub(&interpreter->tokenizer, tokenIdentifier->symbolIndex);
-            if (!item) return ErrorUndefinedSubprogram;
-            tokenCALL->jumpToken = item->token;
-        }
-        else if (interpreter->pass == PassRun)
-        {
-            if (type == TokenRASTER)
+            // if (interpreter->pass == PassPrepare)
+            // {
+                struct JumpLabelItem *item = tok_getJumpLabel(&interpreter->tokenizer, tokenIdentifier->symbolIndex);
+                if (!item) return ErrorUndefinedLabel;
+                tokenGOTO->jumpToken = item->token;
+            // }
+            if (interpreter->pass == PassRun)
             {
-                interpreter->currentOnRasterToken = tokenCALL->jumpToken;
-            }
-            else if (type == TokenVBL)
-            {
-                interpreter->currentOnVBLToken = tokenCALL->jumpToken;
+                interpreter->pc = tokenGOTO->jumpToken; // after label
             }
         }
+        else if(tokenGOSUB)
+        {
+            //if (interpreter->pass == PassPrepare)
+            //{
+                struct JumpLabelItem *item = tok_getJumpLabel(&interpreter->tokenizer, tokenIdentifier->symbolIndex);
+                if (!item) return ErrorUndefinedLabel;
+                tokenGOSUB->jumpToken = item->token;
+            //}
+            if (interpreter->pass == PassRun)
+            {
+                enum ErrorCode errorCode = lab_pushLabelStackItem(interpreter, LabelTypeGOSUB, interpreter->pc);
+                if (errorCode != ErrorNone) return errorCode;
+                
+                interpreter->pc = tokenGOSUB->jumpToken; // after label
+            }
+        }
+        else return ErrorNone;
+
     }
     
     return itp_endOfCommand(interpreter);

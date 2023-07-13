@@ -135,6 +135,7 @@ enum TokenType {
     TokenMCELL,
     TokenMID,
     TokenMIN,
+    TokenCLAMP,
     TokenMUSIC,
     TokenNEXT,
     TokenNUMBER,

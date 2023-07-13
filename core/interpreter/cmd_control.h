@@ -35,6 +35,7 @@ enum ErrorCode cmd_FOR(struct Core *core);
 enum ErrorCode cmd_NEXT(struct Core *core);
 enum ErrorCode cmd_GOTO(struct Core *core);
 enum ErrorCode cmd_GOSUB(struct Core *core);
+enum ErrorCode cmd_ONGOSUB(struct Core *core);
 enum ErrorCode cmd_RETURN(struct Core *core);
 enum ErrorCode cmd_WAIT(struct Core *core);
 enum ErrorCode cmd_ON(struct Core *core);

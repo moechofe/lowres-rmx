@@ -116,6 +116,11 @@ int main(int argc, const char * argv[])
 
     coreInput.shown.width=216;
     coreInput.shown.height=384;
+    // TEMP: 
+    // coreInput.safe.left=1;
+    // coreInput.safe.top=1;
+    // coreInput.safe.right=1;
+    // coreInput.safe.bottom=1;
     
     settings_init(&settings, mainProgramFilename, argc, argv);
     runner_init(&runner);

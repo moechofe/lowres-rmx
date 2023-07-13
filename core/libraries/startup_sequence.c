@@ -22,6 +22,7 @@
 #include "core.h"
 #include <string.h>
 #include <stdint.h>
+#include "io_chip.h"
 
 #define FONT_CHAR_OFFSET 192
 
@@ -35,6 +36,13 @@ void runStartupSequence(struct Core *core)
     struct TextLib *textLib = &core->interpreter->textLib;
     textLib->fontCharOffset = FONT_CHAR_OFFSET;
     txtlib_clearScreen(textLib);
+
+    struct IORegisters *io = &core->machine->ioRegisters;
+
+    textLib->windowX = (io->safe.left+7)/8;
+    textLib->windowY = (io->safe.top+7)/8;
+    textLib->windowWidth = io->shown.width/8 - (io->safe.left+7)/8 - (io->safe.right+7)/8;
+    textLib->windowHeight = io->shown.height/8 - (io->safe.top+7)/8 - (io->safe.bottom+7)/8;
     
     // default characters/font
     if (strcmp(entries[0].comment, "FONT") == 0)

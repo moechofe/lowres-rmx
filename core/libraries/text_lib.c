@@ -356,6 +356,8 @@ void txtlib_clearScreen(struct TextLib *lib)
     reg->attr.spritesEnabled = 1;
     reg->attr.planeAEnabled = 1;
     reg->attr.planeBEnabled = 1;
+    reg->attr.planeCEnabled = 1;
+    reg->attr.planeDEnabled = 1;
     
     lib->windowX = 0;
     lib->windowY = 0;

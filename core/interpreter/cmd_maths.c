@@ -41,7 +41,7 @@ struct TypedValue fnc_math0(struct Core *core)
         switch (type)
         {
             case TokenPI:
-                value.v.floatValue = M_PI;
+                value.v.floatValue = 3.14159265358979323846264338327950288;
                 break;
                 
             default:
@@ -197,6 +197,65 @@ struct TypedValue fnc_math2(struct Core *core)
                 value.v.floatValue = (x < y) ? x : y;
                 break;
                 
+            default:
+                assert(0);
+                break;
+        }
+    }
+    return value;
+}
+
+struct TypedValue fnc_math3(struct Core *core)
+{
+    struct Interpreter *interpreter = core->interpreter;
+
+    // function
+    enum TokenType type = interpreter->pc->type;
+    ++interpreter->pc;
+
+    // bracket open
+    if (interpreter->pc->type != TokenBracketOpen) return val_makeError(ErrorSyntax);
+        ++interpreter->pc;
+
+    // x expression
+    struct TypedValue xValue = itp_evaluateExpression(core, TypeClassNumeric);
+    if (xValue.type == ValueTypeError) return xValue;
+    
+    // comma
+    if (interpreter->pc->type != TokenComma) return val_makeError(ErrorSyntax);
+    ++interpreter->pc;
+
+    // y expression
+    struct TypedValue yValue = itp_evaluateExpression(core, TypeClassNumeric);
+    if (yValue.type == ValueTypeError) return yValue;
+
+    // comma
+    if (interpreter->pc->type != TokenComma) return val_makeError(ErrorSyntax);
+    ++interpreter->pc;
+
+    // z expression
+    struct TypedValue zValue = itp_evaluateExpression(core, TypeClassNumeric);
+    if (zValue.type == ValueTypeError) return zValue;
+
+    // bracket close
+    if (interpreter->pc->type != TokenBracketClose) return val_makeError(ErrorSyntax);
+    ++interpreter->pc;
+    
+    struct TypedValue value;
+    value.type = ValueTypeFloat;
+
+    if (interpreter->pass == PassRun)
+    {
+        float x = xValue.v.floatValue;
+        float y = yValue.v.floatValue;
+        float z = zValue.v.floatValue;
+
+        switch (type)
+        {
+            case TokenCLAMP:
+                value.v.floatValue = (x < y) ? y : (x > z) ? z : x;
+                break;
+
             default:
                 assert(0);
                 break;

@@ -202,7 +202,7 @@ enum ErrorCode cmd_BG_VIEW(struct Core *core)
     ++interpreter->pc;
     
     // bg value
-    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 1);
+    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 3);
     if (bgValue.type == ValueTypeError) return bgValue.v.errorCode;
     
     if (interpreter->pass == PassRun)
@@ -212,9 +212,17 @@ enum ErrorCode cmd_BG_VIEW(struct Core *core)
         {
             core->machine->videoRegisters.attr.planeAEnabled = value;
         }
-        else
+        else if (bgValue.v.floatValue == 1)
         {
             core->machine->videoRegisters.attr.planeBEnabled = value;
+        }
+        else if (bgValue.v.floatValue == 2)
+        {
+            core->machine->videoRegisters.attr.planeCEnabled = value;
+        }
+        else if (bgValue.v.floatValue == 3)
+        {
+            core->machine->videoRegisters.attr.planeDEnabled = value;
         }
     }
 
@@ -230,7 +238,7 @@ enum ErrorCode cmd_CELL_SIZE(struct Core *core)
     ++interpreter->pc;
     
     // bg value
-    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 1);
+    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 3);
     if (bgValue.type == ValueTypeError) return bgValue.v.errorCode;
     
     // comma
@@ -247,9 +255,17 @@ enum ErrorCode cmd_CELL_SIZE(struct Core *core)
         {
             core->machine->videoRegisters.attr.planeACellSize = sValue.v.floatValue;
         }
-        else
+        else if(bgValue.v.floatValue == 1)
         {
             core->machine->videoRegisters.attr.planeBCellSize = sValue.v.floatValue;
+        }
+        else if(bgValue.v.floatValue == 2)
+        {
+            core->machine->videoRegisters.attr.planeCCellSize = sValue.v.floatValue;
+        }
+        else if(bgValue.v.floatValue == 3)
+        {
+            core->machine->videoRegisters.attr.planeDCellSize = sValue.v.floatValue;
         }
     }
     
@@ -344,7 +360,7 @@ struct TypedValue fnc_SCROLL_X_Y(struct Core *core)
     ++interpreter->pc;
     
     // bg value
-    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 1);
+    struct TypedValue bgValue = itp_evaluateNumericExpression(core, 0, 3);
     if (bgValue.type == ValueTypeError) return bgValue;
     
     // bracket close
@@ -365,9 +381,17 @@ struct TypedValue fnc_SCROLL_X_Y(struct Core *core)
                 {
                     value.v.floatValue = reg->scrollAX | (reg->scrollMSB.aX << 8);
                 }
-                else
+                else if (bg == 1)
                 {
                     value.v.floatValue = reg->scrollBX | (reg->scrollMSB.bX << 8);
+                }
+                else if (bg == 2)
+                {
+                    value.v.floatValue = reg->scrollCX | (reg->scrollMSB.cX << 8);
+                }
+                else if (bg == 3)
+                {
+                    value.v.floatValue = reg->scrollDX | (reg->scrollMSB.dX << 8);
                 }
                 break;
                 
@@ -376,9 +400,17 @@ struct TypedValue fnc_SCROLL_X_Y(struct Core *core)
                 {
                     value.v.floatValue = reg->scrollAY | (reg->scrollMSB.aY << 8);
                 }
-                else
+                else if (bg == 1)
                 {
                     value.v.floatValue = reg->scrollBY | (reg->scrollMSB.bY << 8);
+                }
+                else if (bg == 2)
+                {
+                    value.v.floatValue = reg->scrollCY | (reg->scrollMSB.cY << 8);
+                }
+                else if (bg == 3)
+                {
+                    value.v.floatValue = reg->scrollDY | (reg->scrollMSB.cY << 8);
                 }
                 break;
                 

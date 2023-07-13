@@ -131,6 +131,7 @@ const char *TokenStrings[] = {
     "MCELL",
     "MID$",
     "MIN",
+    "CLAMP",
     "MUSIC",
     "NEXT",
     "NUMBER",

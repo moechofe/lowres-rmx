@@ -55,12 +55,6 @@ void core_init(struct Core *core)
     if (!core->overlay) exit(EXIT_FAILURE);
 
     struct IORegisters *ioRegisters = &core->machine->ioRegisters;
-    // ioRegisters->shown.width=216;
-    // ioRegisters->shown.height=384;
-    // ioRegisters->safe.left=0;
-    // ioRegisters->safe.top=0;
-    // ioRegisters->safe.right=0;
-    // ioRegisters->safe.bottom=0;
 
     ioRegisters->attr.touchEnabled=1;
 

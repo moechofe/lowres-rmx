@@ -1083,6 +1083,9 @@ struct TypedValue itp_evaluateFunction(struct Core *core)
         case TokenMAX:
         case TokenMIN:
             return fnc_math2(core);
+
+        case TokenCLAMP:
+            return fnc_math3(core);
             
         case TokenRND:
             return fnc_RND(core);

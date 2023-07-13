@@ -26,9 +26,9 @@
 #include "video_chip.h"
 #include "overlay_data.h"
 #include "text_lib.h"
-#include "core.h"
 
 struct Core;
+struct CoreInput;
 
 struct Overlay {
     struct Plane plane;
