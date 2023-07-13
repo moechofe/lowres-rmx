@@ -73,11 +73,11 @@ enum ErrorCode cmd_SPRITE(struct Core *core)
             // 0.25
             // 0.125
             // 0.0625                       0b_0000_0001        
-            
+
             int n = nValue.v.floatValue;
             struct Sprite *sprite = &core->machine->spriteRegisters.sprites[n];
-            if (xValue.type != ValueTypeNull) sprite->x = ((int)xValue.v.floatValue + SPRITE_OFFSET_X) & 0x1FF;
-            if (yValue.type != ValueTypeNull) sprite->y = ((int)yValue.v.floatValue + SPRITE_OFFSET_Y) & 0x1FF;
+            if (xValue.type != ValueTypeNull) sprite->x = (int)((xValue.v.floatValue + SPRITE_OFFSET_X)*16) & 0x1FFF;
+            if (yValue.type != ValueTypeNull) sprite->y = (int)((yValue.v.floatValue + SPRITE_OFFSET_Y)*16) & 0x1FFF;
             if (cValue.type != ValueTypeNull) sprite->character = cValue.v.floatValue;
         }
     }
@@ -225,11 +225,11 @@ struct TypedValue fnc_SPRITE(struct Core *core)
         switch (type)
         {
             case TokenSPRITEX:
-                value.v.floatValue = sprite->x - SPRITE_OFFSET_X;
+                value.v.floatValue = (float)sprite->x/16 - SPRITE_OFFSET_X;
                 break;
                 
             case TokenSPRITEY:
-                value.v.floatValue = sprite->y - SPRITE_OFFSET_Y;
+                value.v.floatValue = (float)sprite->y/16 - SPRITE_OFFSET_Y;
                 break;
                 
             case TokenSPRITEC:

@@ -25,21 +25,21 @@
 bool sprlib_isSpriteOnScreen(struct Sprite *sprite)
 {
     int size = (sprite->attr.size + 1) << 3;
-    return (   sprite->x < SCREEN_WIDTH + SPRITE_OFFSET_X
-            && (int)sprite->y < SCREEN_HEIGHT + SPRITE_OFFSET_Y
-            && sprite->x + size > SPRITE_OFFSET_X
-            && sprite->y + size > SPRITE_OFFSET_Y);
+    return (   (sprite->x/16) < SCREEN_WIDTH + SPRITE_OFFSET_X
+            && (sprite->y/16) < SCREEN_HEIGHT + SPRITE_OFFSET_Y
+            && (sprite->x/16) + size > SPRITE_OFFSET_X
+            && (sprite->y/16) + size > SPRITE_OFFSET_Y);
 }
 
 bool sprlib_checkSingleCollision(struct SpritesLib *lib, struct Sprite *sprite, struct Sprite *otherSprite)
 {
     if (sprlib_isSpriteOnScreen(otherSprite))
     {
-        int ax1 = sprite->x;
-        int ay1 = sprite->y;
+        int ax1 = (sprite->x/16);
+        int ay1 = (sprite->y/16);
         
-        int ax2 = otherSprite->x;
-        int ay2 = otherSprite->y;
+        int ax2 = (otherSprite->x/16);
+        int ay2 = (otherSprite->y/16);
         
         int s1 = (sprite->attr.size + 1) << 3;
         int s2 = (otherSprite->attr.size + 1) << 3;
