@@ -170,8 +170,13 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
             ioRegisters->status.touch = 1;
             float x = input->touchX;
             float y = input->touchY;
-            if (x < 0) x = 0; else if (x >= SCREEN_WIDTH) x = SCREEN_WIDTH - 1;
-            if (y < 0) y = 0; else if (y >= SCREEN_HEIGHT) y = SCREEN_HEIGHT - 1;
+            if (core->interpreter->compat)
+            {
+              x-=(SCREEN_WIDTH-160)/2;
+              y-=(SCREEN_HEIGHT-128)/2;
+              //if (x < 0) x = 0; else if (x >= 160) x = 160 - 1;
+              //if (y < 0) y = 0; else if (y >= 128) y = 128 - 1;
+            }
             ioRegisters->touchX = x;
             ioRegisters->touchY = y;
         }
@@ -194,6 +199,14 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
     ioRegisters->safe.left = input->safe.left;
     ioRegisters->safe.bottom = input->safe.bottom;
     
+    struct TextLib *textLib = &core->interpreter->textLib;
+    if(textLib->windowWidth==0 && textLib->windowHeight==0)
+    {
+        textLib->windowX = (input->safe.left+7)/8;
+        textLib->windowY = (input->safe.top+7)/8;
+        textLib->windowWidth = input->shown.width/8 - (input->safe.left+7)/8 - (input->safe.right+7)/8;
+        textLib->windowHeight = input->shown.height/8 - (input->safe.top+7)/8 - (input->safe.bottom+7)/8;
+    }
 //
 //    for (int i = 0; i < NUM_GAMEPADS; i++)
 //    {

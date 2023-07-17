@@ -47,5 +47,6 @@ enum ErrorCode cmd_WHILE(struct Core *core);
 enum ErrorCode cmd_WEND(struct Core *core);
 enum ErrorCode cmd_EXIT(struct Core *core);
 enum ErrorCode cmd_SYSTEM(struct Core *core);
+enum ErrorCode cmd_COMPAT(struct Core *core);
 
 #endif /* cmd_control_h */

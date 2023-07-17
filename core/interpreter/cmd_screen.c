@@ -138,8 +138,8 @@ enum ErrorCode cmd_SCROLL(struct Core *core)
         {
             reg->scrollDX = x & 0xFF;
             reg->scrollDY = y & 0xFF;
-            reg->scrollMSB.cX = (x >> 8) & 1;
-            reg->scrollMSB.cY = (y >> 8) & 1;
+            reg->scrollMSB.dX = (x >> 8) & 1;
+            reg->scrollMSB.dY = (y >> 8) & 1;
         }
     }
     

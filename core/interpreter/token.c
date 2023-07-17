@@ -217,6 +217,11 @@ const char *TokenStrings[] = {
     "SAFE.T",
     "SAFE.R",
     "SAFE.B",
+
+    "PARTICLE",
+    "EMITTER",
+    "AT",
+    "COMPAT",
     
     // Reserved Keywords
     NULL,

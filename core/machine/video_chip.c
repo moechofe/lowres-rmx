@@ -197,7 +197,18 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
     struct VideoRegisters *reg = &core->machine->videoRegisters;
     struct SpriteRegisters *sreg = &core->machine->spriteRegisters;
     struct ColorRegisters *creg = &core->machine->colorRegisters;
-    for (int y = 0; y < SCREEN_HEIGHT; y++)
+
+    int width=SCREEN_WIDTH;
+    int height=SCREEN_HEIGHT;
+    int skip_each_line=0;
+    if (core->interpreter->compat)
+    {
+      width=160;
+      height=128;
+      skip_each_line=(SCREEN_WIDTH-width)/2;
+      outputPixel+=SCREEN_WIDTH*(SCREEN_HEIGHT-height)/2;
+    }
+    for (int y = 0; y<height; y++)
     {
         reg->rasterLine = y;
         itp_runInterrupt(core, InterruptTypeRaster);
@@ -206,6 +217,18 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
         bool skip = (core->interpreter->interruptOverCycles > 0);
         if (!skip)
         {
+            if (reg->attr.planeDEnabled)
+            {
+                int scrollX = reg->scrollDX | (reg->scrollMSB.dX << 8);
+                int scrollY = reg->scrollDY | (reg->scrollMSB.dY << 8);
+                video_renderPlane(ram->characters, &ram->planeD, reg->attr.planeDCellSize, y, scrollX, scrollY, 0, scanlineBuffer);
+            }
+            if (reg->attr.planeCEnabled)
+            {
+                int scrollX = reg->scrollCX | (reg->scrollMSB.cX << 8);
+                int scrollY = reg->scrollCY | (reg->scrollMSB.cY << 8);
+                video_renderPlane(ram->characters, &ram->planeC, reg->attr.planeCCellSize, y, scrollX, scrollY, 0, scanlineBuffer);
+            }
             if (reg->attr.planeBEnabled)
             {
                 int scrollX = reg->scrollBX | (reg->scrollMSB.bX << 8);
@@ -218,18 +241,6 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
                 int scrollY = reg->scrollAY | (reg->scrollMSB.aY << 8);
                 video_renderPlane(ram->characters, &ram->planeA, reg->attr.planeACellSize, y, scrollX, scrollY, 0, scanlineBuffer);
             }
-            if (reg->attr.planeCEnabled)
-            {
-                int scrollX = reg->scrollCX | (reg->scrollMSB.cX << 8);
-                int scrollY = reg->scrollCY | (reg->scrollMSB.cY << 8);
-                video_renderPlane(ram->characters, &ram->planeC, reg->attr.planeCCellSize, y, scrollX, scrollY, 0, scanlineBuffer);
-            }
-            if (reg->attr.planeDEnabled)
-            {
-                int scrollX = reg->scrollDX | (reg->scrollMSB.dX << 8);
-                int scrollY = reg->scrollDY | (reg->scrollMSB.dY << 8);
-                video_renderPlane(ram->characters, &ram->planeD, reg->attr.planeDCellSize, y, scrollX, scrollY, 0, scanlineBuffer);
-            }
             if (reg->attr.spritesEnabled)
             {
                 memset(scanlineSpriteBuffer, 0, sizeof(scanlineSpriteBuffer));
@@ -240,7 +251,9 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
         // overlay
         video_renderPlane((struct Character *)overlayCharacters, &core->overlay->plane, 0, y, 0, 0, OVERLAY_FLAG, scanlineBuffer);
         
-        for (int x = 0; x < SCREEN_WIDTH; x++)
+        outputPixel+=skip_each_line;
+
+        for (int x = 0; x < width; x++)
         {
             int colorIndex = scanlineBuffer[x] & 0x1F;
             int color = (scanlineBuffer[x] & OVERLAY_FLAG) ? overlayColors[colorIndex] : skip ? 0 : creg->colors[colorIndex];
@@ -257,5 +270,7 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
             *outputPixel = c;
             ++outputPixel;
         }
+
+        outputPixel+=skip_each_line;
     }
 }

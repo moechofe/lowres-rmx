@@ -41,6 +41,7 @@
 #include "cmd_files.h"
 #include "cmd_subs.h"
 #include "string_utils.h"
+#include "cmd_particle.h"
 
 struct TypedValue itp_evaluateExpressionLevel(struct Core *core, int level);
 struct TypedValue itp_evaluatePrimaryExpression(struct Core *core);
@@ -108,6 +109,7 @@ struct CoreError itp_compileProgram(struct Core *core, const char *sourceCode)
     interpreter->subLevel = 0;
     interpreter->numLabelStackItems = 0;
     interpreter->isSingleLineIf = false;
+    interpreter->compat = false;
     
     enum ErrorCode errorCode;
     do
@@ -147,9 +149,11 @@ struct CoreError itp_compileProgram(struct Core *core, const char *sourceCode)
     memset(&interpreter->textLib, 0, sizeof(struct TextLib));
     memset(&interpreter->spritesLib, 0, sizeof(struct SpritesLib));
     memset(&interpreter->audioLib, 0, sizeof(struct AudioLib));
+    memset(&interpreter->particlesLib, 0, sizeof(struct ParticlesLib));
     interpreter->textLib.core = core;
     interpreter->spritesLib.core = core;
     interpreter->audioLib.core = core;
+    interpreter->particlesLib.core = core;
 
     return err_noCoreError();
 }
@@ -179,7 +183,9 @@ void itp_runProgram(struct Core *core)
             {
                 errorCode = itp_evaluateCommand(core);
             }
-            
+
+            prtclib_update(&core->interpreter->particlesLib);
+
             if (interpreter->cycles >= MAX_CYCLES_TOTAL_PER_FRAME)
             {
                 machine_suspendEnergySaving(core, 2);
@@ -1164,7 +1170,7 @@ struct TypedValue itp_evaluateFunction(struct Core *core)
         case TokenSAFER:
         case TokenSAFEB:
             return fnc_SAFE(core);
-            
+
         case TokenFILE:
             return fnc_FILE(core);
             
@@ -1329,6 +1335,9 @@ enum ErrorCode itp_evaluateCommand(struct Core *core)
             
         case TokenSYSTEM:
             return cmd_SYSTEM(core);
+
+        case TokenCOMPAT:
+            return cmd_COMPAT(core);
 
         case TokenRANDOMIZE:
             return cmd_RANDOMIZE(core);
@@ -1531,6 +1540,9 @@ enum ErrorCode itp_evaluateCommand(struct Core *core)
             
         case TokenTRACK:
             return cmd_TRACK(core);
+
+        case TokenPARTICLE:
+            return cmd_PARTICLE(core);
             
         default:
             printf("Command not implemented: %s\n", TokenStrings[interpreter->pc->type]);

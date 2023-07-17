@@ -222,6 +222,11 @@ enum TokenType {
     TokenSAFER,
     TokenSAFEB,
 
+    TokenPARTICLE,
+    TokenEMITTER,
+    TokenAT,
+    TokenCOMPAT,
+
     // Reserved Keywords
     Token_reserved,
     TokenANIM,

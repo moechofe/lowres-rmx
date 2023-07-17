@@ -876,3 +876,18 @@ enum ErrorCode cmd_SYSTEM(struct Core *core)
     
     return itp_endOfCommand(interpreter);
 }
+
+enum ErrorCode cmd_COMPAT(struct Core *core)
+{
+    struct Interpreter *interpreter = core->interpreter;
+    
+    // COMPAT
+    ++interpreter->pc;
+        
+    if (interpreter->pass == PassRun)
+    {
+        interpreter->compat = true;
+    }
+    
+    return itp_endOfCommand(interpreter);
+}

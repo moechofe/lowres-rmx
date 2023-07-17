@@ -114,8 +114,8 @@ int main(int argc, const char * argv[])
 {
     memset(&coreInput, 0, sizeof(struct CoreInput));
 
-    coreInput.shown.width=216;
-    coreInput.shown.height=384;
+    coreInput.shown.width=216-16;
+    coreInput.shown.height=384-16;
     // TEMP: 
     // coreInput.safe.left=1;
     // coreInput.safe.top=1;

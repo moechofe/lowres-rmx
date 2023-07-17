@@ -36,6 +36,7 @@
 #include "audio_lib.h"
 #include "io_chip.h"
 #include "data_manager.h"
+#include "particles_lib.h"
 
 #define BAS_TRUE -1.0f
 #define BAS_FALSE 0.0f
@@ -82,6 +83,8 @@ struct Interpreter {
     int cpuLoadDisplay;
     int cpuLoadMax;
     int cpuLoadTimer;
+
+    bool compat;
     
     struct Tokenizer tokenizer;
     
@@ -118,6 +121,7 @@ struct Interpreter {
     struct TextLib textLib;
     struct SpritesLib spritesLib;
     struct AudioLib audioLib;
+    struct ParticlesLib particlesLib;
 };
 
 void itp_init(struct Core *core);
