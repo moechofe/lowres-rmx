@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "/home/martin/Cloud/Works/lowres-nx"
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.configureOnOpen": true
 }
