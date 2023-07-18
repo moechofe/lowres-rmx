@@ -172,10 +172,12 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
             float y = input->touchY;
             if (core->interpreter->compat)
             {
-              x-=(SCREEN_WIDTH-160)/2;
-              y-=(SCREEN_HEIGHT-128)/2;
-              //if (x < 0) x = 0; else if (x >= 160) x = 160 - 1;
-              //if (y < 0) y = 0; else if (y >= 128) y = 128 - 1;
+                int sw=ioRegisters->shown.width!=0?ioRegisters->shown.width:SCREEN_WIDTH;
+                int sh=ioRegisters->shown.height!=0?ioRegisters->shown.height:SCREEN_HEIGHT;
+                x-=(sw-160)/2;
+                y-=(sh-128)/2;
+                //if (x < 0) x = 0; else if (x >= 160) x = 160 - 1;
+                //if (y < 0) y = 0; else if (y >= 128) y = 128 - 1;
             }
             ioRegisters->touchX = x;
             ioRegisters->touchY = y;

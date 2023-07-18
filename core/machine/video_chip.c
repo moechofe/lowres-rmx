@@ -197,21 +197,33 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
     struct VideoRegisters *reg = &core->machine->videoRegisters;
     struct SpriteRegisters *sreg = &core->machine->spriteRegisters;
     struct ColorRegisters *creg = &core->machine->colorRegisters;
+    struct IORegisters *io = &core->machine->ioRegisters;
 
     int width=SCREEN_WIDTH;
     int height=SCREEN_HEIGHT;
-    int skip_each_line=0;
+    int skip_before=0;
+    int skip_after=0;
     if (core->interpreter->compat)
     {
-      width=160;
-      height=128;
-      skip_each_line=(SCREEN_WIDTH-width)/2;
-      outputPixel+=SCREEN_WIDTH*(SCREEN_HEIGHT-height)/2;
+        int sw=io->shown.width!=0?io->shown.width:SCREEN_WIDTH;
+        int sh=io->shown.height!=0?io->shown.height:SCREEN_HEIGHT;
+        width=160;
+        height=128;
+        skip_before=(sw-width)/2;
+        skip_after=SCREEN_WIDTH-width-skip_before;
+        outputPixel+=SCREEN_WIDTH*(sh-height)/2;
     }
     for (int y = 0; y<height; y++)
     {
         reg->rasterLine = y;
-        itp_runInterrupt(core, InterruptTypeRaster);
+        if (core->interpreter->compat && y>=0 && y<120)
+        {
+            itp_runInterrupt(core, InterruptTypeRaster);
+        }
+        else
+        {
+            itp_runInterrupt(core, InterruptTypeRaster);
+        }
         memset(scanlineBuffer, 0, sizeof(scanlineBuffer));
         
         bool skip = (core->interpreter->interruptOverCycles > 0);
@@ -251,7 +263,7 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
         // overlay
         video_renderPlane((struct Character *)overlayCharacters, &core->overlay->plane, 0, y, 0, 0, OVERLAY_FLAG, scanlineBuffer);
         
-        outputPixel+=skip_each_line;
+        outputPixel+=skip_before;
 
         for (int x = 0; x < width; x++)
         {
@@ -271,6 +283,6 @@ void video_renderScreen(struct Core *core, uint32_t *outputRGB)
             ++outputPixel;
         }
 
-        outputPixel+=skip_each_line;
+        outputPixel+=skip_after;
     }
 }
