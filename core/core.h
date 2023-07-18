@@ -51,8 +51,8 @@ struct CoreInputGamepad {
 
 struct CoreInput {
     struct CoreInputGamepad gamepads[NUM_GAMEPADS];
-    struct { int width,height; } shown;
-    struct { int left,top,right,bottom; } safe;
+    // For SHOWN and SAFE
+    int width,height,left,top,right,bottom;
     bool pause;
     float touchX;
     float touchY;

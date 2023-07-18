@@ -191,21 +191,21 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
         ioRegisters->status.touch = 0;
     }
     
-    ioRegisters->shown.width = input->shown.width;
-    ioRegisters->shown.height = input->shown.height;
+    ioRegisters->shown.width = input->width;
+    ioRegisters->shown.height = input->height;
 
-    ioRegisters->safe.right = input->safe.right;
-    ioRegisters->safe.top = input->safe.top;
-    ioRegisters->safe.left = input->safe.left;
-    ioRegisters->safe.bottom = input->safe.bottom;
+    ioRegisters->safe.right = input->right;
+    ioRegisters->safe.top = input->top;
+    ioRegisters->safe.left = input->left;
+    ioRegisters->safe.bottom = input->bottom;
     
     struct TextLib *textLib = &core->interpreter->textLib;
     if(textLib->windowWidth==0 && textLib->windowHeight==0)
     {
-        textLib->windowX = (input->safe.left+7)/8;
-        textLib->windowY = (input->safe.top+7)/8;
-        textLib->windowWidth = input->shown.width/8 - (input->safe.left+7)/8 - (input->safe.right+7)/8;
-        textLib->windowHeight = input->shown.height/8 - (input->safe.top+7)/8 - (input->safe.bottom+7)/8;
+        textLib->windowX = (input->left+7)/8;
+        textLib->windowY = (input->top+7)/8;
+        textLib->windowWidth = input->width/8 - (input->left+7)/8 - (input->right+7)/8;
+        textLib->windowHeight = input->height/8 - (input->top+7)/8 - (input->bottom+7)/8;
     }
 //
 //    for (int i = 0; i < NUM_GAMEPADS; i++)

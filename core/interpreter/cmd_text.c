@@ -358,7 +358,7 @@ enum ErrorCode cmd_LOCATE(struct Core *core)
     ++interpreter->pc;
     
     // x value
-    struct TypedValue xValue = itp_evaluateNumericExpression(core, 0, core->interpreter->textLib.windowWidth - 1);
+    struct TypedValue xValue = itp_evaluateNumericExpression(core, 0, 255);
     if (xValue.type == ValueTypeError) return xValue.v.errorCode;
     
     // comma
@@ -366,7 +366,7 @@ enum ErrorCode cmd_LOCATE(struct Core *core)
     ++interpreter->pc;
     
     // y value
-    struct TypedValue yValue = itp_evaluateNumericExpression(core, 0, core->interpreter->textLib.windowHeight - 1);
+    struct TypedValue yValue = itp_evaluateNumericExpression(core, 0, 255);
     if (yValue.type == ValueTypeError) return yValue.v.errorCode;
 
     if (interpreter->pass == PassRun)
