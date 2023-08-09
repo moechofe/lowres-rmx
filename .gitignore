@@ -71,3 +71,4 @@ platform/Windows/.vs/
 platform/web/output
 Disk.nx
 *.o
+.DS_Store
