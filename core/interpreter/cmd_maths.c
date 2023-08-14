@@ -264,6 +264,135 @@ struct TypedValue fnc_math3(struct Core *core)
     return value;
 }
 
+float easeOutBounce(float x) {
+
+  if (x < 1 / 2.75) return (7.5625 * x * x);
+  if (x < 2 / 2.75) {
+    x = x - (1.5 / 2.75);
+    return (7.5625 * x * x + 0.75);
+  }
+  else if (x < 2.5 / 2.75) {
+    x = x - (2.25 / 2.75);
+    return (7.5625 * x * x + 0.9375);
+  }
+  x = x - (2.625 / 2.75);
+  return (7.5625 * x * x + 0.984375);
+}
+
+float easeInBounce(float x) {
+  return 1 - easeOutBounce(1 - x);
+}
+
+float easeInOutBounce(float x) {
+  return x < 0.5
+    ? (1 - easeOutBounce(1 - 2 * x)) / 2
+    : (1 + easeOutBounce(2 * x - 1)) / 2;
+}
+
+struct TypedValue fnc_EASE(struct Core *core)
+{
+    struct Interpreter *interpreter = core->interpreter;
+
+    // function
+    enum TokenType type = interpreter->pc->type;
+    ++interpreter->pc;
+       
+    // bracket open
+    if (interpreter->pc->type != TokenBracketOpen) return val_makeError(ErrorSyntax);
+        ++interpreter->pc;
+
+    // easing value
+    struct TypedValue easing = itp_evaluateNumericExpression(core, 0, 9);
+    if (easing.type == ValueTypeError) return easing;
+
+    // comma
+    if (interpreter->pc->type != TokenComma) return val_makeError(ErrorSyntax);
+    ++interpreter->pc;
+
+    // inout value
+    struct TypedValue inout = itp_evaluateNumericExpression(core, -1, 1);
+    if (inout.type == ValueTypeError) return inout;
+
+    // comma
+    if (interpreter->pc->type != TokenComma) return val_makeError(ErrorSyntax);
+    ++interpreter->pc;
+    
+    // x expression
+    struct TypedValue xValue = itp_evaluateExpression(core, TypeClassNumeric);
+    if (xValue.type == ValueTypeError) return xValue;
+
+    // bracket close
+    if (interpreter->pc->type != TokenBracketClose) return val_makeError(ErrorSyntax);
+    ++interpreter->pc;
+
+    int e=(int)easing.v.floatValue;
+    int io=(int)inout.v.floatValue;
+    float x=xValue.v.floatValue;
+    float v;
+
+    x = x>1.0 ? 1.0 : x<0.0 ? 0.0 : x;
+
+    const c1 = 1.70158;
+    const c2 = c1 * 1.525;
+    const c3 = c1 + 1;
+    const c4 = (2 * M_PI) / 3;
+    const c5 = (2 * M_PI) / 4.5;
+
+    // linear
+    if (e==0) v = xValue.v.floatValue;
+
+    // sine
+    else if(e==1 && io<0) v = 1 - cosf((x * M_PI) / 2);
+    else if(e==1 && io==0) v = -(cosf(M_PI * x) - 1) / 2;
+    else if(e==1 && io>0) v = sinf((x * M_PI) / 2);
+
+    // quad
+    else if(e==2 && io<0) v =  x * x;
+    else if(e==2 && io==0) v = x < 0.5 ? 2 * x * x : 1 - pow(-2 * x + 2, 2) / 2;
+    else if(e==2 && io>0) v = 1 - (1 - x) * (1 - x);
+
+    // cubic
+    else if(e==3 && io<0) v = x * x * x;
+    else if(e==3 && io==0) v = x < 0.5 ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
+    else if(e==3 && io>0) v = 1 - pow(1 - x, 3);
+    
+    // quart
+    else if(e==4 && io<0) v = x * x * x * x;
+    else if(e==4 && io==0) v = x < 0.5 ? 8 * x * x * x * x : 1 - pow(-2 * x + 2, 4) / 2;
+    else if(e==4 && io>0) v = 1 - pow(1 - x, 4);
+    
+    // quint
+    else if(e==5 && io<0) v =  x * x * x * x * x;
+    else if(e==5 && io==0) v = x < 0.5 ? 16 * x * x * x * x * x : 1 - pow(-2 * x + 2, 5) / 2;
+    else if(e==5 && io>0) v = 1 - pow(1 - x, 5);
+    
+    // circ
+    else if(e==6 && io<0) v = 1 - sqrt(1 - pow(x, 2));
+    else if(e==6 && io==0) v = x < 0.5 ? (1 - sqrt(1 - pow(2 * x, 2))) / 2 : (sqrt(1 - pow(-2 * x + 2, 2)) + 1) / 2;
+    else if(e==6 && io>0) v = sqrt(1 - pow(x - 1, 2));
+    
+    // back
+    else if(e==7 && io<0) v = c3 * x * x * x - c1 * x * x;
+    else if(e==7 && io==0) v = x < 0.5 ? (pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2 : (pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
+    else if(e==7 && io>0) v = 1 + c3 * pow(x - 1, 3) + c1 * pow(x - 1, 2);
+
+    // elastic
+    else if(e==8 && io<0) v = x == 0 ? 0 : x == 1 ? 1 : -pow(2, 10 * x - 10) * sinf((x * 10 - 10.75) * c4);
+    else if(e==8 && io==0) v = x == 0 ? 0 : x == 1 ? 1 : x < 0.5 ? -(pow(2, 20 * x - 10) * sinf((20 * x - 11.125) * c5)) / 2 : (pow(2, -20 * x + 10) * sinf((20 * x - 11.125) * c5)) / 2 + 1;
+    else if(e==8 && io>0) v = x == 0 ? 0 : x == 1 ? 1 : pow(2, -10 * x) * sinf((x * 10 - 0.75) * c4) + 1;
+    
+    // bounce
+    else if(e==9 && io<0) v = easeInBounce(x);
+    else if(e==9 && io==0) v = easeInOutBounce(x);
+    else if(e==9 && io>0) v = easeOutBounce(x);
+            
+    struct TypedValue value;
+    value.type = ValueTypeFloat;
+    value.v.floatValue = v;
+
+    return value;
+}
+
 enum ErrorCode cmd_RANDOMIZE(struct Core *core)
 {
     struct Interpreter *interpreter = core->interpreter;

@@ -28,6 +28,7 @@ struct Core;
 
 enum ErrorCode cmd_DATA(struct Core *core);
 enum ErrorCode cmd_READ(struct Core *core);
+enum ErrorCode cmd_SKIP(struct Core *core);
 enum ErrorCode cmd_RESTORE(struct Core *core);
 
 #endif /* cmd_data_h */

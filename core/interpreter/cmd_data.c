@@ -120,6 +120,27 @@ enum ErrorCode cmd_READ(struct Core *core)
     return itp_endOfCommand(interpreter);
 }
 
+enum ErrorCode cmd_SKIP(struct Core *core)
+{
+    struct Interpreter *interpreter = core->interpreter;
+
+    // SKIP
+    struct Token *tokenSKIP = interpreter->pc;
+    ++interpreter->pc;
+
+    // skip value
+    struct TypedValue skipValue = itp_evaluateExpression(core, TypeClassNumeric);
+    if (skipValue.type == ValueTypeError) return skipValue.v.errorCode;
+    int skip = (int)skipValue.v.floatValue;
+
+    if (interpreter->pass == PassRun)
+    {
+        while(skip-->0) dat_nextData(interpreter);
+    }
+    
+    return itp_endOfCommand(interpreter);
+}
+
 enum ErrorCode cmd_RESTORE(struct Core *core)
 {
     struct Interpreter *interpreter = core->interpreter;

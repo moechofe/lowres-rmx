@@ -1182,6 +1182,9 @@ struct TypedValue itp_evaluateFunction(struct Core *core)
             
         case TokenMUSIC:
             return fnc_MUSIC(core);
+        
+        case TokenEASE:
+            return fnc_EASE(core);
             
         default:
             break;
@@ -1281,6 +1284,9 @@ enum ErrorCode itp_evaluateCommand(struct Core *core)
 
         case TokenREAD:
             return cmd_READ(core);
+
+        case TokenSKIP:
+            return cmd_SKIP(core);
 
         case TokenRESTORE:
             return cmd_RESTORE(core);

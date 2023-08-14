@@ -31,7 +31,7 @@ void machine_init(struct Core *core)
 
 void machine_reset(struct Core *core, bool resetPersistent)
 {
-    // rom, video ram, working ram
+    // video ram, working ram
     memset(core->machine, 0, 0xE000);
     
     if (resetPersistent)
@@ -40,8 +40,8 @@ void machine_reset(struct Core *core, bool resetPersistent)
         memset(core->machine->persistentRam, 0, PERSISTENT_RAM_SIZE);
     }
     
-    // registers and reserved spaces
-    //memset(core->machine->reservedMemory, 0, 0x1000);
+    // rom
+    memset(core->machine->cartridgeRom, 0, 0x10000);
     
     memset(core->machineInternals, 0, sizeof(struct MachineInternals));
     audio_reset(core);
