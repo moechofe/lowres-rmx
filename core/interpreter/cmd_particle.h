@@ -6,5 +6,6 @@
 struct Core;
 
 enum ErrorCode cmd_PARTICLE(struct Core *core);
+enum ErrorCode cmd_EMITTER(struct Core *core);
 
 #endif

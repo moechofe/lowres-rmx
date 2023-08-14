@@ -66,6 +66,14 @@ int machine_peek(struct Core *core, int address)
     return *(uint8_t *)((uint8_t *)core->machine + address);
 }
 
+short int machine_peek_short(struct Core *core, int address)
+{
+    int peek1=machine_peek(core, address);
+    int peek2=machine_peek(core, address+1);
+    if(peek1<0 || peek2<0) return -1;
+    return peek1|(peek2<<8);
+}
+
 bool machine_poke(struct Core *core, int address, int value)
 {
     if (address < 0 && address >= 0x10000)
@@ -119,6 +127,14 @@ bool machine_poke(struct Core *core, int address, int value)
     {
         machine_enableAudio(core);
     }
+    return true;
+}
+
+bool machine_poke_short(struct Core *core, int address, int16_t value)
+{
+    bool poke1 = machine_poke(core, address, value);
+    bool poke2 = machine_poke(core, address + 1, value >> 8);
+    if (!poke1 || !poke2) return false;
     return true;
 }
 

@@ -184,7 +184,7 @@ void itp_runProgram(struct Core *core)
                 errorCode = itp_evaluateCommand(core);
             }
 
-            prtclib_update(&core->interpreter->particlesLib);
+            prtclib_update(core, &core->interpreter->particlesLib);
 
             if (interpreter->cycles >= MAX_CYCLES_TOTAL_PER_FRAME)
             {
@@ -1549,6 +1549,9 @@ enum ErrorCode itp_evaluateCommand(struct Core *core)
 
         case TokenPARTICLE:
             return cmd_PARTICLE(core);
+
+        case TokenEMITTER:
+            return cmd_EMITTER(core);
             
         default:
             printf("Command not implemented: %s\n", TokenStrings[interpreter->pc->type]);

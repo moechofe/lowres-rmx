@@ -85,7 +85,9 @@ struct MachineInternals {
 void machine_init(struct Core *core);
 void machine_reset(struct Core *core, bool resetPersistent);
 int machine_peek(struct Core *core, int address);
+int16_t machine_peek_short(struct Core *core, int address);
 bool machine_poke(struct Core *core, int address, int value);
+bool machine_poke_short(struct Core *core, int address, int16_t value);
 void machine_enableAudio(struct Core *core);
 void machine_suspendEnergySaving(struct Core *core, int numUpdates);
 
