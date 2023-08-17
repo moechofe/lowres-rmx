@@ -91,7 +91,7 @@ void runStartupSequence(struct Core *core)
 
     // main background source
     int bgStart = entries[3].start;
-    core->interpreter->textLib.sourceAddress = bgStart + 4;
+    core->interpreter->textLib.sourceAddress = 0x10000 + bgStart + 4;
     core->interpreter->textLib.sourceWidth = core->machine->cartridgeRom[bgStart + 2];
     core->interpreter->textLib.sourceHeight = core->machine->cartridgeRom[bgStart + 3];
     
@@ -106,5 +106,5 @@ void runStartupSequence(struct Core *core)
     }
     
     // main sound source
-    core->interpreter->audioLib.sourceAddress = entries[15].start;
+    core->interpreter->audioLib.sourceAddress = 0x10000 + entries[15].start;
 }

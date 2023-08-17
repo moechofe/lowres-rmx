@@ -184,8 +184,6 @@ void itp_runProgram(struct Core *core)
                 errorCode = itp_evaluateCommand(core);
             }
 
-            prtclib_update(core, &core->interpreter->particlesLib);
-
             if (interpreter->cycles >= MAX_CYCLES_TOTAL_PER_FRAME)
             {
                 machine_suspendEnergySaving(core, 2);
@@ -248,6 +246,11 @@ void itp_runInterrupt(struct Core *core, enum InterruptType type)
                     // update audio player
                     audlib_update(&interpreter->audioLib);
                     break;
+                
+                case InterruptTypeParticle:
+                    startToken = interpreter->currentOnParticleToken;
+                    maxCycles = MAX_CYCLES_PER_PARTICLE;
+                    break;
             }
             
             if (startToken)
@@ -257,8 +260,66 @@ void itp_runInterrupt(struct Core *core, enum InterruptType type)
                 struct Token *pc = interpreter->pc;
                 interpreter->pc = startToken;
                 interpreter->subLevel++;
+
+                enum ErrorCode errorCode = ErrorNone;
+
+                if (type == InterruptTypeParticle)
+                {
+                    if (interpreter->pc->type == TokenBracketOpen)
+                    {
+                        // SUB gnagna (
+                        ++interpreter->pc;
+
+                        // SUB gnagna ( sprite_id
+                        struct Token *tokenIdentifier = interpreter->pc;
+                        if (tokenIdentifier->type != TokenIdentifier && tokenIdentifier->type != TokenStringIdentifier) errorCode = ErrorSyntax;
+                        enum ValueType varType = itp_getIdentifierTokenValueType(tokenIdentifier);
+                        if(varType == ValueTypeFloat)
+                        {
+                            // pass by value
+                            struct SimpleVariable *variable = var_createSimpleVariable(interpreter, &errorCode, 1, 1, varType, NULL);
+                            if (variable) {
+                                if (interpreter->pass == PassRun) variable->v.floatValue = (float)interpreter->particlesLib.interrupt_sprite_id;
+                                variable->symbolIndex = tokenIdentifier->symbolIndex;
+                            }
+                            ++interpreter->pc;
+                        }
+                        else errorCode = ErrorTypeMismatch;
+
+                        // SUB gnagna ( sprite_id, )
+                        if (interpreter->pc->type != TokenComma) errorCode = ErrorArgumentCountMismatch;
+                        ++interpreter->pc;
+
+                        // SUB gnagna ( sprite_id, particle_addr
+                        tokenIdentifier = interpreter->pc;
+                        if (tokenIdentifier->type != TokenIdentifier && tokenIdentifier->type != TokenStringIdentifier) errorCode = ErrorSyntax;
+                        varType = itp_getIdentifierTokenValueType(tokenIdentifier);
+                        if(varType == ValueTypeFloat)
+                        {
+                            // pass by value
+                            struct SimpleVariable *variable = var_createSimpleVariable(interpreter, &errorCode, 1, 1, varType, NULL);
+                            if (variable) {
+                                if (interpreter->pass == PassRun) variable->v.floatValue = (float)interpreter->particlesLib.interrupt_particle_addr;
+                                variable->symbolIndex = tokenIdentifier->symbolIndex;
+                            }
+                            ++interpreter->pc;
+                        }
+                        else errorCode = ErrorTypeMismatch;
+
+                        // SUB gnagna ( sprite_id, particle_addr )
+                        if (interpreter->pc->type != TokenBracketClose) errorCode =  ErrorSyntax;
+                        ++interpreter->pc;
+                    }
+                    else errorCode = ErrorArgumentCountMismatch;
+                }
+
+                if (errorCode != ErrorNone)
+                {
+                    itp_endProgram(core);
+                    delegate_interpreterDidFail(core, err_makeCoreError(errorCode, interpreter->pc->sourcePosition));
+                }
                 
-                enum ErrorCode errorCode = lab_pushLabelStackItem(interpreter, LabelTypeONCALL, NULL);
+                errorCode = lab_pushLabelStackItem(interpreter, LabelTypeONCALL, NULL);
                 
                 while (   errorCode == ErrorNone
                        // cycles can exceed interrupt limit (see interruptOverCycles), but there is still a hard limit for extreme cases
@@ -1552,6 +1613,9 @@ enum ErrorCode itp_evaluateCommand(struct Core *core)
 
         case TokenEMITTER:
             return cmd_EMITTER(core);
+
+        case TokenMESSAGE:
+            return cmd_MESSAGE(core);
             
         default:
             printf("Command not implemented: %s\n", TokenStrings[interpreter->pc->type]);

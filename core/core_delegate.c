@@ -76,7 +76,6 @@ void delegate_controlsDidChange(struct Core *core)
             info.keyboardMode = KeyboardModeOff;
         }
         info.numGamepadsEnabled = ioAttr.keyboardEnabled ? 0 : ioAttr.gamepadsEnabled;
-        info.isTouchEnabled = ioAttr.touchEnabled;
         info.isAudioEnabled = core->machineInternals->audioInternals.audioEnabled;
         core->delegate->controlsDidChange(core->delegate->context, info);
     }

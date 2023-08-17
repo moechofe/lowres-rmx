@@ -703,11 +703,7 @@ void update(void *arg)
                 {
                     // user hints for controls
                     union IOAttributes attr = runner.core->machine->ioRegisters.attr;
-                    if (attr.touchEnabled && !attr.keyboardEnabled)
-                    {
-                        overlay_message(runner.core, "TOUCH/MOUSE");
-                    }
-                    if (attr.keyboardEnabled && !attr.touchEnabled)
+                    if (attr.keyboardEnabled)
                     {
                         overlay_message(runner.core, "KEYBOARD");
                     }

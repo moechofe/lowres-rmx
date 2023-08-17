@@ -27,6 +27,10 @@ struct ParticlesLib
     int emitters_count;
     int emitters_data_addr;
     struct Token *emitters_label[SPAWNER_MAX];
+
+    // for PARTICLE sub token during interrupt
+    int interrupt_sprite_id;
+    int interrupt_particle_addr;
 };
 
 void prtclib_setupPool(struct ParticlesLib *lib,int firstSprite,int poolCount,int particleAddr);
@@ -36,7 +40,10 @@ void prtclib_setupEmitter(struct ParticlesLib *lib,int poolCount,int particleAdd
 void prtclib_setSpawnerLabel(struct ParticlesLib *lib,int emitterId,struct Token *label); 
 
 void prtclib_spawn(struct ParticlesLib *lib,int emitterId,float posX,float posY);
+void prtclib_stop(struct ParticlesLib *lib,int emitterId);
 
 void prtclib_update(struct Core *core,struct ParticlesLib *lib);
+void prtclib_interrupt(struct Core *core,struct ParticlesLib *lib);
+void prtclib_clear(struct Core *core,struct ParticlesLib *lib);
 
 #endif

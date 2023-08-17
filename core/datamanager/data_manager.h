@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include "error.h"
 
-#define MAX_ENTRIES 32
+#define MAX_ENTRIES 16
 #define DATA_SIZE 0x10000
 #define ENTRY_COMMENT_SIZE 32
 

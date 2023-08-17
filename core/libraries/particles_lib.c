@@ -5,6 +5,9 @@
 #include "pcg.h"
 
 #define _USE_MATH_DEFINES
+#ifndef __USE_MISC
+  #define __USE_MISC
+#endif
 #include <math.h>
 
 static pcg32_random_t pcg;
@@ -42,8 +45,6 @@ void prtclib_spawn(struct ParticlesLib *lib,int emitterId,float posX,float posY)
 {
     if(emitterId>0 && emitterId<lib->emitters_count) return;
 
-    struct Token *dataToken;
-
     int emitter = lib->emitters_data_addr + emitterId*6; // 6 bytes
 
     machine_poke_short(lib->core, emitter, ((int16_t)posX*16)&0x1FFF);
@@ -53,6 +54,15 @@ void prtclib_spawn(struct ParticlesLib *lib,int emitterId,float posX,float posY)
 
     uint8_t repeat = 1 + dat_readU8(lib->emitters_label[emitterId],7,0);
     machine_poke(lib->core, emitter+5, repeat);  
+}
+
+void prtclib_stop(struct ParticlesLib *lib,int emitterId)
+{
+    if(emitterId>0 && emitterId<lib->emitters_count) return;
+
+    int emitter = lib->emitters_data_addr + emitterId*6; // 6 bytes
+
+    machine_poke(lib->core, emitter+5, 0);
 }
 
 void prtclib_update(struct Core *core, struct ParticlesLib *lib)
@@ -130,16 +140,16 @@ void prtclib_update(struct Core *core, struct ParticlesLib *lib)
     }
 
     // update particles
-    for(int i=0; i<lib->pool_count; ++i)
+    for(int particle_id=0; particle_id<lib->pool_count; ++particle_id)
     {
-        int particle = lib->particles_data_addr + i*6; // 6 bytes
+        int particle = lib->particles_data_addr + particle_id*6; // 6 bytes
 
         // apperance is also used to disable the particle
         int apperance_id=machine_peek(lib->core, particle+4);
         if(apperance_id>APPERANCE_MAX) continue;
 
         // sprite
-        int sprite_id=lib->first_sprite_id+i;
+        int sprite_id=lib->first_sprite_id+particle_id;
         struct Sprite *spr=&lib->core->machine->spriteRegisters.sprites[sprite_id];
 
         // position x
@@ -170,5 +180,37 @@ void prtclib_update(struct Core *core, struct ParticlesLib *lib)
             machine_poke(lib->core, particle+5, (step_id+1)&0x1FFF);
           }
         }
+    }
+}
+
+void prtclib_interrupt(struct Core *core,struct ParticlesLib *lib)
+{
+    for(int particle_id=0; particle_id<lib->pool_count; ++particle_id)
+    {
+        int particle = lib->particles_data_addr + particle_id*6; // 6 bytes
+
+        // apperance is also used to disable the particle
+        int apperance_id=machine_peek(lib->core, particle+4);
+        if(apperance_id>APPERANCE_MAX) continue;
+
+        lib->interrupt_sprite_id = lib->first_sprite_id+particle_id;
+        lib->interrupt_particle_addr = lib->particles_data_addr + particle_id*6;
+
+        itp_runInterrupt(core, InterruptTypeParticle);
+    }
+}
+
+void prtclib_clear(struct Core *core,struct ParticlesLib *lib)
+{
+    for(int particle_id=0; particle_id<lib->pool_count; ++particle_id)
+    {
+        int particle = lib->particles_data_addr + particle_id*6; // 6 bytes
+        machine_poke(lib->core, particle+4, 255);
+
+        int sprite_id=lib->first_sprite_id+particle_id;
+        struct Sprite *spr=&lib->core->machine->spriteRegisters.sprites[sprite_id];
+
+        spr->x = 0;
+        spr->y = 0;
     }
 }

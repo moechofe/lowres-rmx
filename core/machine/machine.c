@@ -23,6 +23,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "core.h"
+#include "video_chip.h"
 
 void machine_init(struct Core *core)
 {
@@ -39,9 +40,14 @@ void machine_reset(struct Core *core, bool resetPersistent)
         // persistent ram
         memset(core->machine->persistentRam, 0, PERSISTENT_RAM_SIZE);
     }
+
+    memset(core->machine->nothing2, 0, VM_SIZE - 0x0FB00);
+
+    // // sprite
+    // memset((void*)&(core->machine->spriteRegisters), 0, sizeof(struct SpriteRegisters));
     
-    // rom
-    memset(core->machine->cartridgeRom, 0, 0x10000);
+    // // rom
+    // memset(core->machine->cartridgeRom, 0, 0x10000);
     
     memset(core->machineInternals, 0, sizeof(struct MachineInternals));
     audio_reset(core);
@@ -97,14 +103,6 @@ bool machine_poke(struct Core *core, int address, int value)
         union IOAttributes currAttr = core->machine->ioRegisters.attr;
         union IOAttributes newAttr;
         newAttr.value = value;
-        if (currAttr.gamepadsEnabled > 0 && (newAttr.gamepadsEnabled == 0 || newAttr.touchEnabled))
-        {
-            return false;
-        }
-        if (currAttr.touchEnabled && (newAttr.touchEnabled == 0 || newAttr.gamepadsEnabled > 0))
-        {
-            return false;
-        }
     }
     else if (address >= 0x0E000 && address < 0x0F800) // persistent
     {

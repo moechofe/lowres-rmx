@@ -39,5 +39,6 @@ enum ErrorCode cmd_LOCATE(struct Core *core);
 struct TypedValue fnc_CURSOR(struct Core *core);
 enum ErrorCode cmd_CLW(struct Core *core);
 enum ErrorCode cmd_TRACE(struct Core *core);
+enum ErrorCode cmd_MESSAGE(struct Core *core);
 
 #endif /* cmd_text_h */

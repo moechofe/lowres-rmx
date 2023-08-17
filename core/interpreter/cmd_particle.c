@@ -13,6 +13,15 @@ enum ErrorCode cmd_PARTICLE(struct Core *core)
     // PARTICLE
     ++interpreter->pc;
 
+    // PARTICLE OFF
+    if(interpreter->pc->type==TokenOFF)
+    {
+        ++interpreter->pc;
+        
+        prtclib_clear(core, lib);
+        return itp_endOfCommand(interpreter);
+    }
+
     // PARTICLE <NUM>
     // PARTICLE <APPAREANCE>
     struct TypedValue nValue = itp_evaluateExpression(core, TypeClassNumeric);
@@ -65,13 +74,6 @@ enum ErrorCode cmd_PARTICLE(struct Core *core)
           struct JumpLabelItem *item = tok_getJumpLabel(&interpreter->tokenizer, tk->symbolIndex);
 
           struct Token *dataToken = dat_reachData(interpreter, item->token);
-
-          // struct Token *dataToken = interpreter->firstData;
-          // while (dataToken && dataToken < item->token)
-          // {
-          //     dataToken = dataToken->jumpToken;
-          // }
-          // dataToken = dataToken + 1; // skip DATA
 
           prtclib_setApperanceLabel(lib,(int)nValue.v.floatValue,dataToken);
         }
@@ -135,12 +137,6 @@ enum ErrorCode cmd_EMITTER(struct Core *core)
           struct JumpLabelItem *item = tok_getJumpLabel(&interpreter->tokenizer, tk->symbolIndex);
 
           struct Token *dataToken = dat_reachData(interpreter, item->token);
-          // struct Token *dataToken = interpreter->firstData;
-          // while (dataToken && dataToken < item->token)
-          // {
-          //     dataToken = dataToken->jumpToken;
-          // }
-          // dataToken = dataToken + 1; // skip DATA
 
           prtclib_setSpawnerLabel(lib,(int)nValue.v.floatValue,dataToken);
         }
@@ -167,6 +163,17 @@ enum ErrorCode cmd_EMITTER(struct Core *core)
         if(yValue.type==ValueTypeError) return yValue.v.errorCode;
 
         if(interpreter->pass == PassRun) prtclib_spawn(lib, (int)nValue.v.floatValue, xValue.v.floatValue, yValue.v.floatValue);
+    }
+    else if(interpreter->pc->type==TokenOFF)
+    {
+        // EMITTER <SPAWNER>
+        if(core->interpreter->pass==PassPrepare && nValue.type!=ValueTypeFloat) return ErrorTypeMismatch;
+        else if(core->interpreter->pass==PassRun && ((int)nValue.v.floatValue<0 || (int)nValue.v.floatValue>SPAWNER_MAX-1)) return ErrorInvalidParameter;
+
+        // EMITTER <SPAWNER> OFF
+        ++interpreter->pc;
+
+        if(interpreter->pass == PassRun) prtclib_stop(lib, (int)nValue.v.floatValue);
     }
     else return ErrorSyntax;
 

@@ -21,6 +21,9 @@
 #define _USE_MATH_DEFINES
 #include "cmd_maths.h"
 #include "core.h"
+
+#define _USE_MATH_DEFINES
+#define __USE_MISC
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -98,7 +101,7 @@ struct TypedValue fnc_math1(struct Core *core)
                 break;
                 
             case TokenCOS:
-                value.v.floatValue = cosf(xValue.v.floatValue);
+                value.v.floatValue = cosf(xValue.v.floatValue * M_PI * 2);
                 break;
                 
             case TokenEXP:
@@ -131,7 +134,7 @@ struct TypedValue fnc_math1(struct Core *core)
                 break;
                 
             case TokenSIN:
-                value.v.floatValue = sinf(xValue.v.floatValue);
+                value.v.floatValue = sinf(xValue.v.floatValue * M_PI * 2);
                 break;
                 
             case TokenSQR:
@@ -140,7 +143,7 @@ struct TypedValue fnc_math1(struct Core *core)
                 break;
                 
             case TokenTAN:
-                value.v.floatValue = tanf(xValue.v.floatValue);
+                value.v.floatValue = tanf(xValue.v.floatValue * M_PI * 2);
                 break;
                                 
             default:

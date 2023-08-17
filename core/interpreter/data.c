@@ -98,6 +98,7 @@ struct Token* dat_readData(struct Token *dataToken, int skip)
         }
         else return NULL;
     }
+    return NULL;
 }
 
 float dat_readFloat(struct Token *jumpToken, int skip, float def)

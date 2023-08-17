@@ -56,8 +56,6 @@ void core_init(struct Core *core)
 
     struct IORegisters *ioRegisters = &core->machine->ioRegisters;
 
-    ioRegisters->attr.touchEnabled=1;
-
     machine_init(core);
     itp_init(core);
     overlay_init(core);
@@ -133,7 +131,9 @@ void core_update(struct Core *core, struct CoreInput *input)
 {
     core_handleInput(core, input);
     itp_runInterrupt(core, InterruptTypeVBL);
+    prtclib_interrupt(core,&core->interpreter->particlesLib);
     itp_runProgram(core);
+    prtclib_update(core,&core->interpreter->particlesLib);    
     itp_didFinishVBL(core);
     overlay_updateLayout(core, input);
     overlay_draw(core, true);
@@ -165,7 +165,6 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
     
     if (input->touch)
     {
-        if (ioAttr.touchEnabled)
         {
             ioRegisters->status.touch = 1;
             float x = input->touchX;
@@ -181,10 +180,6 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
             }
             ioRegisters->touchX = x;
             ioRegisters->touchY = y;
-        }
-        else
-        {
-            ioRegisters->status.touch = 0;
         }
         machine_suspendEnergySaving(core, 2);
     }

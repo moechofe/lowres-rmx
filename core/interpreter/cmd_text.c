@@ -475,3 +475,27 @@ enum ErrorCode cmd_TRACE(struct Core *core)
     return itp_endOfCommand(interpreter);
 }
 
+enum ErrorCode cmd_MESSAGE(struct Core *core)
+{
+    struct Interpreter *interpreter = core->interpreter;
+    struct TextLib *lib = &core->overlay->textLib;
+
+    // TRACE
+    ++interpreter->pc;
+    
+    struct TypedValue value = itp_evaluateExpression(core, TypeClassAny);
+    if (value.type == ValueTypeError) return value.v.errorCode;
+    
+    if (interpreter->pass == PassRun)
+    {
+        if (value.type == ValueTypeString)
+        {
+            overlay_message(core, value.v.stringValue->chars);
+            rcstring_release(value.v.stringValue);
+        }
+        else return ErrorTypeMismatch;
+    }
+    
+    return itp_endOfCommand(interpreter);
+}
+

@@ -65,7 +65,8 @@ enum Mode {
 
 enum InterruptType {
     InterruptTypeRaster,
-    InterruptTypeVBL
+    InterruptTypeVBL,
+    InterruptTypeParticle
 };
 
 struct Interpreter {
@@ -108,6 +109,7 @@ struct Interpreter {
     
     struct Token *currentOnRasterToken;
     struct Token *currentOnVBLToken;
+    struct Token *currentOnParticleToken;
     
     int waitCount;
     bool exitEvaluation;

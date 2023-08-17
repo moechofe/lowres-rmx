@@ -86,7 +86,6 @@ void dev_show(struct DevMenu *devMenu, bool reload)
     machine_reset(core, true);
     overlay_reset(core);
     
-    core->machine->ioRegisters.attr.touchEnabled = 1;
     core->machineInternals->isEnergySaving = true;
     
     txtlib_clearScreen(textLib);

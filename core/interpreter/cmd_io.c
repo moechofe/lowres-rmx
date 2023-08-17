@@ -44,50 +44,6 @@ enum ErrorCode cmd_KEYBOARD(struct Core *core)
     return itp_endOfCommand(interpreter);
 }
 
-// enum ErrorCode cmd_TOUCHSCREEN(struct Core *core)
-// {
-//     struct Interpreter *interpreter = core->interpreter;
-    
-//     // TOUCHSCREEN
-//     ++interpreter->pc;
-        
-//     if (interpreter->pass == PassRun)
-//     {
-//         if (core->machine->ioRegisters.attr.gamepadsEnabled > 0) return ErrorInputChangeNotAllowed;
-//         core->machine->ioRegisters.attr.touchEnabled = 1;
-//         delegate_controlsDidChange(core);
-//     }
-    
-//     return itp_endOfCommand(interpreter);
-// }
-
-// enum ErrorCode cmd_GAMEPAD(struct Core *core)
-// {
-//     struct Interpreter *interpreter = core->interpreter;
-    
-//     // GAMEPAD
-//     ++interpreter->pc;
-    
-//     // number
-//     struct TypedValue value = itp_evaluateNumericExpression(core, 1, 2);
-//     if (value.type == ValueTypeError) return value.v.errorCode;
-    
-//     if (interpreter->pass == PassRun)
-//     {
-//         if (core->machine->ioRegisters.attr.touchEnabled) return ErrorInputChangeNotAllowed;
-        
-//         core->machine->ioRegisters.attr.gamepadsEnabled = value.v.floatValue;
-//         core->machine->ioRegisters.status.touch = 0;
-//         for (int i = 0; i < NUM_GAMEPADS; i++)
-//         {
-//             core->machine->ioRegisters.gamepads[i].value = 0;
-//         }
-//         delegate_controlsDidChange(core);
-//     }
-    
-//     return itp_endOfCommand(interpreter);
-// }
-
 enum ErrorCode cmd_PAUSE(struct Core *core)
 {
     struct Interpreter *interpreter = core->interpreter;
@@ -288,9 +244,7 @@ struct TypedValue fnc_TAP(struct Core *core)
     value.type = ValueTypeFloat;
     
     if (interpreter->pass == PassRun)
-    {
-        if (core->machine->ioRegisters.attr.touchEnabled == 0) return val_makeError(ErrorTouchNotEnabled);
-        
+    {      
         value.v.floatValue = (core->machine->ioRegisters.status.touch && !core->interpreter->lastFrameIOStatus.touch) ? BAS_TRUE : BAS_FALSE;
     }
     return value;
@@ -309,8 +263,6 @@ struct TypedValue fnc_TOUCH_X_Y(struct Core *core)
     
     if (interpreter->pass == PassRun)
     {
-        if (core->machine->ioRegisters.attr.touchEnabled == 0) return val_makeError(ErrorTouchNotEnabled);
-        
         if (type == TokenTOUCHX)
         {
             value.v.floatValue = core->machine->ioRegisters.touchX;
@@ -369,9 +321,7 @@ struct TypedValue fnc_SAFE(struct Core *core)
     value.type = ValueTypeFloat;
     
     if (interpreter->pass == PassRun)
-    {
-        if (core->machine->ioRegisters.attr.touchEnabled == 0) return val_makeError(ErrorTouchNotEnabled);
-        
+    {        
         if (type == TokenSAFEL)
         {
             value.v.floatValue = core->machine->ioRegisters.safe.left;

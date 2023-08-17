@@ -511,8 +511,8 @@ enum ErrorCode cmd_ON(struct Core *core)
     // ON
     ++interpreter->pc;
     
-    // RASTER/VBL
-    if (interpreter->pc->type == TokenRASTER || interpreter->pc->type == TokenVBL)
+    // RASTER/VBL/PARTICLE
+    if (interpreter->pc->type == TokenRASTER || interpreter->pc->type == TokenVBL || interpreter->pc->type == TokenPARTICLE)
     {
         enum TokenType type = interpreter->pc->type;
         ++interpreter->pc;
@@ -531,6 +531,10 @@ enum ErrorCode cmd_ON(struct Core *core)
                 else if (type == TokenVBL)
                 {
                     interpreter->currentOnVBLToken = NULL;
+                }
+                else if (type == TokenPARTICLE)
+                {
+                    interpreter->currentOnParticleToken = NULL;
                 }
             }
         }
@@ -561,6 +565,10 @@ enum ErrorCode cmd_ON(struct Core *core)
                 else if (type == TokenVBL)
                 {
                     interpreter->currentOnVBLToken = tokenCALL->jumpToken;
+                }
+                else if (type == TokenPARTICLE)
+                {
+                    interpreter->currentOnParticleToken = tokenCALL->jumpToken;
                 }
             }
         }

@@ -222,7 +222,7 @@ void controlsDidChange(void *context, struct ControlsInfo controlsInfo)
     {
         SDL_StopTextInput();
     }
-    setMouseEnabled(controlsInfo.isTouchEnabled);
+    setMouseEnabled(true);
 }
 
 /** Called when persistent RAM will be accessed the first time */
