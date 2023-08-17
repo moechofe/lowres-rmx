@@ -53,7 +53,6 @@ union IOStatus {
 
 union IOAttributes {
     struct {
-        uint8_t gamepadsEnabled:2; // 0: off, 1...2: number of players
         uint8_t keyboardEnabled:1;
     };
     uint8_t value;

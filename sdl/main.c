@@ -638,34 +638,6 @@ void update(void *arg)
     }
     
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    for (int i = 0; i < 2; i++)
-    {
-        struct CoreInputGamepad *gamepad = &coreInput.gamepads[i];
-        if (i < numJoysticks)
-        {
-            SDL_Joystick *joy = joysticks[i];
-            Uint8 hat = SDL_JoystickGetHat(joy, 0);
-            Sint16 axisX = SDL_JoystickGetAxis(joy, 0);
-            Sint16 axisY = SDL_JoystickGetAxis(joy, 1);
-            // gamepad->up = (hat & SDL_HAT_UP) != 0 || axisY < -joyAxisThreshold;
-            // gamepad->down = (hat & SDL_HAT_DOWN) != 0 || axisY > joyAxisThreshold;
-            // gamepad->left = (hat & SDL_HAT_LEFT) != 0 || axisX < -joyAxisThreshold;
-            // gamepad->right = (hat & SDL_HAT_RIGHT) != 0 || axisX > joyAxisThreshold;
-            gamepad->buttonA = SDL_JoystickGetButton(joy, 0);
-            gamepad->buttonB = SDL_JoystickGetButton(joy, 1);
-        }
-        else
-        {
-            int ci = i - numJoysticks;
-            int m = settings.session.mapping;
-            // gamepad->up = state[keyboardControls[m][ci][0]];
-            // gamepad->down = state[keyboardControls[m][ci][1]];
-            // gamepad->left = state[keyboardControls[m][ci][2]];
-            // gamepad->right = state[keyboardControls[m][ci][3]];
-            gamepad->buttonA = state[keyboardControls[m][ci][4]] || state[keyboardControls[m][ci][6]];
-            gamepad->buttonB = state[keyboardControls[m][ci][5]] || state[keyboardControls[m][ci][7]];
-        }
-    }
     
     switch (mainState)
     {
@@ -706,25 +678,6 @@ void update(void *arg)
                     if (attr.keyboardEnabled)
                     {
                         overlay_message(runner.core, "KEYBOARD");
-                    }
-                    if (attr.gamepadsEnabled && !attr.keyboardEnabled && settings.session.mapping == 0)
-                    {
-                        if (attr.gamepadsEnabled == 2)
-                        {
-                            if (messageNumber % 2 == 1)
-                            {
-                                overlay_message(runner.core, "P2 ]:ESDF [:TAB \\:Q");
-                            }
-                            else
-                            {
-                                overlay_message(runner.core, "P1 ]:ARROWS [:N \\:M");
-                            }
-                            messageNumber++;
-                        }
-                        else
-                        {
-                            overlay_message(runner.core, "]:ARROWS [:Z \\:X");
-                        }
                     }
                 }
             }

@@ -23,7 +23,9 @@
 #include "core.h"
 
 #define _USE_MATH_DEFINES
+#ifndef __USE_MISC
 #define __USE_MISC
+#endif
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -333,13 +335,13 @@ struct TypedValue fnc_EASE(struct Core *core)
     float x=xValue.v.floatValue;
     float v;
 
-    x = x>1.0 ? 1.0 : x<0.0 ? 0.0 : x;
+    x = x>1.0f ? 1.0f : x<0.0f ? 0.0f : x;
 
-    const c1 = 1.70158;
-    const c2 = c1 * 1.525;
-    const c3 = c1 + 1;
-    const c4 = (2 * M_PI) / 3;
-    const c5 = (2 * M_PI) / 4.5;
+    const float c1 = 1.70158;
+    const float c2 = c1 * 1.525;
+    const float c3 = c1 + 1;
+    const float c4 = (2 * M_PI) / 3;
+    const float c5 = (2 * M_PI) / 4.5;
 
     // linear
     if (e==0) v = xValue.v.floatValue;

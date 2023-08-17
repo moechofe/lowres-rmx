@@ -193,9 +193,7 @@ struct TypedValue fnc_BUTTON(struct Core *core)
     value.type = ValueTypeFloat;
     
     if (interpreter->pass == PassRun)
-    {
-        if (core->machine->ioRegisters.attr.gamepadsEnabled == 0) return val_makeError(ErrorGamepadNotEnabled);
-        
+    {        
         int p = pValue.v.floatValue;
         union Gamepad *gamepad = &core->machine->ioRegisters.gamepads[p];
 

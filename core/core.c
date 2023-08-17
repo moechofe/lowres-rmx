@@ -243,7 +243,7 @@ void core_handleInput(struct Core *core, struct CoreInput *input)
             overlay_updateState(core);
             processedOtherInput = true;
         }
-        else if (ioAttr.gamepadsEnabled > 0 && !ioAttr.keyboardEnabled) {
+        else if (!ioAttr.keyboardEnabled) {
             ioRegisters->status.pause = 1;
         }
         input->pause = false;
