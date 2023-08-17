@@ -1,4 +1,15 @@
 {
     "cmake.sourceDirectory": "${workspaceFolder}",
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "math.h": "c",
+        "corecrt_math_defines.h": "c",
+        "array": "c",
+        "functional": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "istream": "c",
+        "ostream": "c"
+    }
 }
