@@ -40,17 +40,7 @@ struct Core {
     struct CoreDelegate *delegate;
 };
 
-struct CoreInputGamepad {
-    bool up;
-    bool down;
-    bool left;
-    bool right;
-    bool buttonA;
-    bool buttonB;
-};
-
 struct CoreInput {
-    struct CoreInputGamepad gamepads[NUM_GAMEPADS];
     // For SHOWN and SAFE
     int width,height,left,top,right,bottom;
     bool pause;

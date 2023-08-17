@@ -288,17 +288,6 @@ bool core_shouldRender(struct Core *core)
     return shouldRender;
 }
 
-void core_setInputGamepad(struct CoreInput *input, int player, bool up, bool down, bool left, bool right, bool buttonA, bool buttonB)
-{
-    struct CoreInputGamepad *gamepad = &input->gamepads[player];
-    gamepad->up = up;
-    gamepad->down = down;
-    gamepad->left = left;
-    gamepad->right = right;
-    gamepad->buttonA = buttonA;
-    gamepad->buttonB = buttonB;
-}
-
 void core_diskLoaded(struct Core *core)
 {
     core->interpreter->state = StateEvaluate;
